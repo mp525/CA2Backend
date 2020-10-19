@@ -15,7 +15,7 @@ import javax.persistence.Id;
  *
  * @author SJUBER
  */
-@Entity
+@Entity 
 public class Phone implements Serializable {
 
     private static final long serialVersionUID = 1L;
