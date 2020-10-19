@@ -30,19 +30,5 @@ public class PersonFacade {
         }
         return instance;
 }
-    public int getPersonIDByPhone(int phone) {
-        EntityManager em=emf.createEntityManager();
-    TypedQuery<Phone> query = em.createQuery(
-        "SELECT p FROM Phone p WHERE p.number = '" + phone + "'",
-        Phone.class);
-    return query.getSingleResult().getNumber();
-  }
-    public Person getPersonByPhone(int phone){
-        EntityManager em=emf.createEntityManager();
-        int id = getPersonIDByPhone(phone);
-    TypedQuery<Person> query = em.createQuery(
-        "SELECT p FROM Person p WHERE p.id = '" + id + "'",
-        Person.class);
-    return query.getSingleResult();
-  }
+    
 }
