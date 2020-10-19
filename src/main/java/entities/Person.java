@@ -1,12 +1,16 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -25,6 +29,12 @@ public class Person implements Serializable {
     
     @ManyToOne(cascade = CascadeType.PERSIST)
     private Address address;
+    
+    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST)
+    private List<Phone> phones;
+    
+    @ManyToMany(mappedBy = "persons", cascade = CascadeType.PERSIST)
+    private List<Hobby> hobbies;
 
     public Person() {
     }
@@ -33,6 +43,34 @@ public class Person implements Serializable {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.phones = new ArrayList();
+        this.hobbies = new ArrayList();
+    }
+    
+    public void addHobby(Hobby hobby){
+            if(hobby != null){
+              this.hobbies.add(hobby);
+            hobby.getPersons().add(this);
+            }
+            
+            
+        }
+        public void removeHobby(Hobby hobby){
+            if(hobby != null){
+                hobbies.remove(hobby);
+                hobby.getPersons().remove(this);
+            }
+        }
+    
+     public List<Phone> getPhones() {
+        return phones;
+    }
+
+    public void addPhone(Phone phone) {
+        this.phones.add(phone);
+        if(phone != null){
+            phone.setPerson(this);
+        }
     }
     
     public Address getAddress() {

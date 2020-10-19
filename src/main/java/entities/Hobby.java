@@ -6,12 +6,15 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 /**
  *
@@ -28,6 +31,9 @@ public class Hobby implements Serializable {
     private String wikiLink;
     private String category;
     private String type;
+    
+    @ManyToMany
+    private List<Person> persons;
 
     public Hobby() {
     }
@@ -37,8 +43,17 @@ public class Hobby implements Serializable {
         this.wikiLink = wikiLink;
         this.category = category;
         this.type = type;
+        this.persons = new ArrayList<>();
     }
 
+     public List<Person> getPersons() {
+        return persons;
+    }
+
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
+    }
+    
     public String getName() {
         return name;
     }

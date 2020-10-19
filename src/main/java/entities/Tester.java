@@ -27,13 +27,25 @@ public class Tester {
         Address a2 = new Address("street2", "info2");
         Address a3 = new Address("street3", "info3");
         
-       
-        
         a1.addPerson(p1);
         a1.addPerson(p2);
         a2.addPerson(p3);
         
+        Phone ph1 = new Phone(11111111, "Home");
+        Phone ph2 = new Phone(11111112, "Home");
+        Phone ph3 = new Phone(11111113, "Home");
 
+        p1.addPhone(ph1);
+        p2.addPhone(ph2);
+        p2.addPhone(ph3);
+        
+        Hobby h1 = new Hobby("name", "wikilink", "categoy", "type");
+        Hobby h2 = new Hobby("dnd", "wikilink", "categoy", "type");
+        
+        p1.addHobby(h1);
+        p1.addHobby(h2);
+        p3.addHobby(h1);
+        
         try {
             em.getTransaction().begin();
             em.persist(p1);

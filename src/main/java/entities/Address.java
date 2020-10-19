@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 /**
@@ -31,6 +32,9 @@ public class Address implements Serializable {
     
     @OneToMany(mappedBy = "address", cascade = CascadeType.PERSIST)
     private List<Person> persons;
+    
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private CityInfo cityInfo;
 
     public Address(String street, String additionalInfo) {
         this.street = street;
@@ -39,6 +43,17 @@ public class Address implements Serializable {
     }
 
     public Address() {
+    }
+    
+    public CityInfo getCityInfo() {
+        return cityInfo;
+    }
+
+    public void setCityInfo(CityInfo cityInfo) {
+        this.cityInfo = cityInfo;
+//        if (address != null) {
+//            address.addPerson(this);
+//        }
     }
 
       public List<Person> getPersons() {
