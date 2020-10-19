@@ -1,10 +1,12 @@
 package entities;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -20,6 +22,9 @@ public class Person implements Serializable {
     private String email;
     private String firstName;
     private String lastName;
+    
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private Address address;
 
     public Person() {
     }
@@ -28,6 +33,17 @@ public class Person implements Serializable {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+    
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+//        if (address != null) {
+//            address.addPerson(this);
+//        }
     }
 
     public String getEmail() {

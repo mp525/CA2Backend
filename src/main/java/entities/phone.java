@@ -16,7 +16,7 @@ import javax.persistence.Id;
  * @author SJUBER
  */
 @Entity
-public class phone implements Serializable {
+public class Phone implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -25,12 +25,12 @@ public class phone implements Serializable {
     private int number;
     private String description;
 
-    public phone(int number, String description) {
+    public Phone(int number, String description) {
         this.number = number;
         this.description = description;
     }
 
-    public phone() {
+    public Phone() {
     }
     
     public Long getId() {
