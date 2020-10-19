@@ -23,7 +23,7 @@ public class Phone implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int number;
-    private String description;
+    private String description; 
 
     public Phone(int number, String description) {
         this.number = number;
