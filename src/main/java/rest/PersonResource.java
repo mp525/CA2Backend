@@ -5,6 +5,7 @@
  */
 package rest;
 
+import com.google.gson.Gson;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -21,10 +22,10 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("person")
 public class PersonResource {
-
+    Gson g;
     @Context
     private UriInfo context;
-
+    
     /**
      * Creates a new instance of PersonResource
      */
@@ -35,11 +36,14 @@ public class PersonResource {
      * Retrieves representation of an instance of rest.PersonResource
      * @return an instance of java.lang.String
      */
+    @Path("/allbyhobby/{hobbyID}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson() {
-        //TODO return proper representation object
-        throw new UnsupportedOperationException();
+        
+        
+        return null;
+        
     }
 
     /**
