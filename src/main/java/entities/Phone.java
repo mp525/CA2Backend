@@ -13,9 +13,9 @@ import javax.persistence.Id;
 
 /**
  *
- * @author SJUBER
+ * @author Mathias
  */
-@Entity 
+@Entity
 public class Phone implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -56,14 +56,5 @@ public class Phone implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    @Override
-    public String toString() {
-        return "phone{" + "number=" + number + ", description=" + description + '}';
-    }
-
-   
-
-
     
 }
