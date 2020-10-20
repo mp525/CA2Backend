@@ -69,19 +69,23 @@ public class PersonFacadeIT {
         p2.addPhone(ph2);
         p2.addPhone(ph3);
 
-        try {
-
-            Hobby h1 = new Hobby("name", "wikilink", "categoy", "type");
-            Hobby h2 = new Hobby("dnd", "wikilink", "categoy", "type");
-            Address a1 = new Address("Street", "2");
-            Address a2 = new Address("street2", "3");
-            Address a3 = new Address("street3", "4");
-            a1.addPerson(p1);
-            a1.addPerson(p2);
-            a2.addPerson(p3);
-            p1.addHobby(h1);
-            p1.addHobby(h2);
-            p3.addHobby(h1);
+        Hobby h1 = new Hobby("name", "wikilink", "categoy", "type");
+        Hobby h2 = new Hobby("dnd", "wikilink", "categoy", "type");
+        CityInfo cf = new CityInfo("2750","Ballerup");
+        Address a1 = new Address("Street", "2");
+        Address a2 = new Address("street2", "3");
+        Address a3 = new Address("street3", "4");
+        a1.setCityInfo(cf);
+        a2.setCityInfo(cf);
+        a3.setCityInfo(cf);
+        
+        a1.addPerson(p1);
+        a1.addPerson(p2);
+        a2.addPerson(p3);
+        p1.addHobby(h1);
+        p1.addHobby(h2);
+        p3.addHobby(h1);
+         try {
 
             em.getTransaction().begin();
             em.createQuery("DELETE from Phone").executeUpdate();
@@ -89,7 +93,9 @@ public class PersonFacadeIT {
             em.createQuery("DELETE from Hobby").executeUpdate();
 
             em.createQuery("DELETE from Address").executeUpdate();
-
+            em.createQuery("DELETE from CityInfo").executeUpdate();
+            
+            
             em.persist(p1);
             em.persist(p2);
             em.persist(p3);
@@ -105,7 +111,18 @@ public class PersonFacadeIT {
     }
 
     @Test
-    public void testgetAllByHobby() {
+
+    public void testGetByPhone(){
+        
+        PersonDTO exp=facade.getByPhone(1);
+        System.out.println(exp);
+        String result="fornavn";
+        assertEquals(result,exp.getFirstName());
+        
+    }
+    @Test
+    public void testgetAllByHobby(){
+        
 
 //        List<PersonDTO> exp=facade.getAllByHobby("dnd");
 //        String result="fornavn";
@@ -130,15 +147,14 @@ public class PersonFacadeIT {
 
         Person pEt = new Person("Firstname", "Lastname", "nice@mail.dude");
 
-        CityInfo ci1 = new CityInfo();
+        CityInfo ci1 = new CityInfo("2383", "Super City");
         Address a1 = new Address("Cool Street", "35");
         a1.setCityInfo(ci1);
         a1.addPerson(pEt);
-
         PersonDTO pd1 = new PersonDTO(pEt);
         pEt.setFirstName("Peter");
         PersonDTO pedit = facade.editPerson(new PersonDTO(pEt));
-
+        
         assertThat(pd1.getFirstName(), is(not(pedit.getFirstName())));
         assertEquals(pd1.getEmail(), pedit.getEmail());
         assertEquals(pd1.getLastName(), pedit.getLastName());
