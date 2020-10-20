@@ -53,6 +53,8 @@ public class PersonFacadeIT {
         p2.addPhone(ph3);
          try {
             em.getTransaction().begin();
+            em.createQuery("DELETE from Phone").executeUpdate();
+            em.createQuery("DELETE from Address").executeUpdate();
             em.createQuery("DELETE from Person").executeUpdate();
             em.persist(p1);
             em.persist(p2);
@@ -75,6 +77,11 @@ public class PersonFacadeIT {
 //        PersonDTO exp=facade.getByPhone(1);
 //        String result="fornavn";
 //        assertEquals(result,exp.getFirstName());
+        
+    }
+    
+    @Test
+    public void testCountWithGivenHobby() {
         
     }
 }
