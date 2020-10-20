@@ -53,4 +53,39 @@ public class PersonFacade {
     public static void main(String[] args) {
         instance.getByPhone(11111112);
     }
+    
+    public int countWithGivenHobby(String hobbyName) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            int personCount = (int) em.createQuery(
+            "SELECT COUNT(*) FROM PERSON JOIN HOBBY_PERSON ON HOBBY_PERSON.persons_ID = PERSON.ID WHERE HOBBY_PERSON.hobbies_NAME = '"+hobbyName+"'")
+            .getSingleResult();
+            return personCount;
+        } finally {
+            em.close();
+        }
+    }
+    
+    public PersonDTO deletePerson(int id) {
+        EntityManager em = emf.createEntityManager();
+        Person person = em.find(Person.class, id);
+        if (person == null) {
+            System.out.println("Error, make exception!!");
+        } else {
+            try {
+                em.getTransaction().begin();
+                em.remove(person);
+                //Delete all phone numbers associated with person
+                List<Phone> phones = person.getPhones();
+                for(Phone phone : phones) {
+                    em.remove(phone);
+                }
+                
+                em.getTransaction().commit();
+            } finally {
+                em.close();
+            }
+        }
+        return new PersonDTO(person);
+    }
 }
