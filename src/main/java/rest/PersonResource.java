@@ -5,7 +5,11 @@
  */
 package rest;
 
+import DTOS.PersonDTO;
 import com.google.gson.Gson;
+import facades.PersonFacade;
+import java.util.List;
+import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -13,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -22,6 +27,8 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("person")
 public class PersonResource {
+    private static EntityManagerFactory emf;
+        private static PersonFacade FACADE;
     Gson g;
     @Context
     private UriInfo context;
@@ -34,24 +41,38 @@ public class PersonResource {
 
     /**
      * Retrieves representation of an instance of rest.PersonResource
+     * @param hobbyID
      * @return an instance of java.lang.String
      */
-    @Path("/allbyhobby/{hobbyID}")
+    @Path("byhobby/{hobbyID}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getJson() {
+    public String getJson(@PathParam("hobbyID")String hobbyID) {
         
-        
+//        List<PersonDTO> p =FACADE.getAllByHobby(hobbyID);
+//        return new Gson().toJson(p);
+
         return null;
+    }
+    @Path("id/{id}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getPersonByPhone(@PathParam("id")int id) {
+//       PersonDTO p = FACADE.getByPhone(id);
+//        
+//        return new Gson().toJson(p);
+
+        return null;
+    }
+    
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String show(){
+        
+        
+        return "Shit work ma dude";
         
     }
 
-    /**
-     * PUT method for updating or creating an instance of PersonResource
-     * @param content representation for the resource
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void putJson(String content) {
-    }
+    
 }

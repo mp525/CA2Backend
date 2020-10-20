@@ -119,16 +119,16 @@ public class PersonFacadeIT {
     }
     @Test
     public void testgetAllByHobby(){
-//        
-//       List<PersonDTO> exp=facade.getAllByHobby("dnd");
-//        String result="fornavn";
-//         
-//       assertThat(exp, everyItem(hasProperty("email")));
-//        assertThat(exp, hasItems( 
-//                Matchers.<PersonDTO>hasProperty("email", is("email1"))
-//               
-//        )
-//      );
+        
+       List<PersonDTO> exp=facade.getAllByHobby("dnd");
+        String result="fornavn";
+         
+       assertThat(exp, everyItem(hasProperty("email")));
+        assertThat(exp, hasItems( 
+                Matchers.<PersonDTO>hasProperty("email", is("email1"))
+               
+        )
+      );
         
     }
     
