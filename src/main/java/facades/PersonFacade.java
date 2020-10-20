@@ -44,6 +44,7 @@ public class PersonFacade {
         try{
         TypedQuery<Person> query = enf.createQuery(
         "SELECT p.person FROM Phone p INNER JOIN p.person pers WHERE p.number='"+ phonenr +"'", Person.class);
+        
         result = query.getSingleResult();
         }finally{
             enf.close();

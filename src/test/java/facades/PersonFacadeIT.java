@@ -51,9 +51,9 @@ public class PersonFacadeIT {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
-        Person p1 = new Person("email1", "fornavn", "efternavn");
-        Person p2 = new Person("email2", "navn", "navn2");
-        Person p3 = new Person("email3", "navnet", "navnet2");
+        Person p1 = new Person("fornavn", "efternavn","email1");
+        Person p2 = new Person("navn", "navn2","email2");
+        Person p3 = new Person("navnet", "navnet2","email3");
         Phone ph1 = new Phone(1, "Home");
         Phone ph2 = new Phone(11111112, "Home");
         Phone ph3 = new Phone(11111113, "Home");
@@ -75,6 +75,7 @@ public class PersonFacadeIT {
             em.getTransaction().begin();
             em.createQuery("DELETE from Phone").executeUpdate();   
             em.createQuery("DELETE from Person").executeUpdate();
+            em.createQuery("DELETE from Hobby").executeUpdate();
                     
             em.createQuery("DELETE from Address").executeUpdate();
             
@@ -97,9 +98,9 @@ public class PersonFacadeIT {
     @Test
     public void testGetByPhone(){
         
-       // PersonDTO exp=facade.getByPhone(1);
-       // String result="fornavn";
-       // assertEquals(result,exp.getFirstName());
+        PersonDTO exp=facade.getByPhone(1);
+        String result="fornavn";
+        assertEquals(result,exp.getFirstName());
         
     }
     @Test
