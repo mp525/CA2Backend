@@ -5,6 +5,7 @@
  */
 package entities;
 
+import DTOS.PersonDTO;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import utils.EMF_Creator;
@@ -31,6 +32,10 @@ public class Tester {
         a1.addPerson(p2);
         a2.addPerson(p3);
         
+        
+        
+        
+        
         Phone ph1 = new Phone(11111111, "Home");
         Phone ph2 = new Phone(11111112, "Home");
         Phone ph3 = new Phone(11111113, "Home");
@@ -45,6 +50,10 @@ public class Tester {
         p1.addHobby(h1);
         p1.addHobby(h2);
         p3.addHobby(h1);
+        
+        PersonDTO pD1 = new PersonDTO(p1);
+        
+        
         
         try {
             em.getTransaction().begin();

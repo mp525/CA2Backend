@@ -66,7 +66,7 @@ public class PersonResource {
         PersonDTO person = GSON.fromJson(p, PersonDTO.class);
         
         person.setId(id);
-        PersonDTO edited = FACADE.editPerson(person.getFirstName(), person.getLastName(), person.getEmail());
+        PersonDTO edited = FACADE.editPerson(person);
         return GSON.toJson(edited);
     }
 
