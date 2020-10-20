@@ -52,6 +52,7 @@ public class Tester {
         PersonFacade facade = PersonFacade.getGMPFacade(emf);
         facade.addPerson(dto1);
         
+        System.out.println(facade.getAllByZip("1011"));
 //        try {
 //            em.getTransaction().begin();
 //            em.persist(p1);
