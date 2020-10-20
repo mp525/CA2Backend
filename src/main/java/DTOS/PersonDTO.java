@@ -7,6 +7,7 @@ package DTOS;
 
 import entities.Hobby;
 import entities.Person;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,7 +59,7 @@ public class PersonDTO {
     
     
     public List<PersonDTO>toDTO(List<Person>persons){
-        List<PersonDTO>dtoes = null;
+        List<PersonDTO>dtoes = new ArrayList();
         for(Person p: persons){
             dtoes.add(new PersonDTO(p));
         }

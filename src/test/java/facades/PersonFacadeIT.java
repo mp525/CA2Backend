@@ -35,6 +35,10 @@ import utils.EMF_Creator;
 public class PersonFacadeIT {
     private static EntityManagerFactory emf;
         private static PersonFacade facade;
+        
+        private Person p1;
+        private Person p2;
+        private Person p3;
     public PersonFacadeIT() {
     }
     
@@ -52,9 +56,9 @@ public class PersonFacadeIT {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
-        Person p1 = new Person("fornavn", "efternavn","email1");
-        Person p2 = new Person("navn", "navn2","email2");
-        Person p3 = new Person("navnet", "navnet2","email3");
+        p1 = new Person("fornavn", "efternavn","email1");
+        p2 = new Person("navn", "navn2","email2");
+        p3 = new Person("navnet", "navnet2","email3");
         Phone ph1 = new Phone(1, "Home");
         Phone ph2 = new Phone(11111112, "Home");
         Phone ph3 = new Phone(11111113, "Home");
@@ -130,5 +134,12 @@ public class PersonFacadeIT {
     public void testCountWithGivenHobby() {
         int res = facade.countWithGivenHobby("name");
         assertEquals(2,res);
+    }
+    
+    @Test
+    public void testAddPerson(){
+        PersonDTO p = new PersonDTO(p1);
+        PersonDTO result = facade.addPerson(p);
+        assertEquals(p.getFirstName(), result.getFirstName());
     }
 }
