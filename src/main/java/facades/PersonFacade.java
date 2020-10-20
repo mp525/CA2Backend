@@ -37,6 +37,7 @@ public class PersonFacade {
         return instance;
 
 }
+    //Matti
     public PersonDTO getByPhone(int phonenr){
         EntityManager enf= emf.createEntityManager();
         Person result;
@@ -71,7 +72,7 @@ public class PersonFacade {
          
     return listDTO;
     }
-
+//
     public PersonDTO addPerson(PersonDTO p) {
         EntityManager em = emf.createEntityManager();
         Person person = new Person(p.getFirstName(), p.getLastName(), p.getEmail());
