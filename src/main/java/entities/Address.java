@@ -28,7 +28,8 @@ public class Address implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String street;
-    private String additionalInfo;
+    private String houseNr;
+    //private String zip;
     
     @OneToMany(mappedBy = "address", cascade = CascadeType.PERSIST)
     private List<Person> persons;
@@ -36,9 +37,10 @@ public class Address implements Serializable {
     @ManyToOne(cascade = CascadeType.PERSIST)
     private CityInfo cityInfo;
 
-    public Address(String street, String additionalInfo) {
+    public Address(String street, String houseNr/*, String zip*/) {
         this.street = street;
-        this.additionalInfo = additionalInfo;
+        this.houseNr = houseNr;
+        //this.zip = zip;
         this.persons = new ArrayList();
     }
 
@@ -72,7 +74,16 @@ public class Address implements Serializable {
                 persons.remove(person);
             }
         }
+
+    public String getHouseNr() {
+        return houseNr;
+    }
+
+    public void setHouseNr(String houseNr) {
+        this.houseNr = houseNr;
+    }
     
+     
     public String getStreet() {
         return street;
     }
@@ -81,13 +92,13 @@ public class Address implements Serializable {
         this.street = street;
     }
 
-    public String getAdditionalInfo() {
-        return additionalInfo;
-    }
-
-    public void setAdditionalInfo(String additionalInfo) {
-        this.additionalInfo = additionalInfo;
-    }
+//    public String getZip() {
+//        return zip;
+//    }
+//
+//    public void setZip(String zip) {
+//        this.zip = zip;
+//    }
 
     public Long getId() {
         return id;
