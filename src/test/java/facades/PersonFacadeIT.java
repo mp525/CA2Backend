@@ -128,6 +128,7 @@ public class PersonFacadeIT {
     
     @Test
     public void testCountWithGivenHobby() {
-        
+        int res = facade.countWithGivenHobby("name");
+        assertEquals(2,res);
     }
 }
