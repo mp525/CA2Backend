@@ -6,10 +6,18 @@
 package facades;
 
 import DTOS.PersonDTO;
+import entities.Hobby;
 import entities.Person;
 import entities.Phone;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.hamcrest.Matchers;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,6 +59,12 @@ public class PersonFacadeIT {
         p1.addPhone(ph1);
         p2.addPhone(ph2);
         p2.addPhone(ph3);
+        Hobby h1 = new Hobby("name", "wikilink", "categoy", "type");
+        Hobby h2 = new Hobby("dnd", "wikilink", "categoy", "type");
+        
+        p1.addHobby(h1);
+        p1.addHobby(h2);
+        p3.addHobby(h1);
          try {
             em.getTransaction().begin();
             em.createQuery("DELETE from Person").executeUpdate();
@@ -72,9 +86,23 @@ public class PersonFacadeIT {
     @Test
     public void testGetByPhone(){
         
-//        PersonDTO exp=facade.getByPhone(1);
+       PersonDTO exp=facade.getByPhone(1);
+        String result="fornavn";
+        assertEquals(result,exp.getFirstName());
+        
+    }
+    @Test
+    public void testgetAllByHobby(){
+        
+//        List<PersonDTO> exp=facade.getAllByHobby("dnd");
 //        String result="fornavn";
-//        assertEquals(result,exp.getFirstName());
+//         
+//        assertThat(exp, everyItem(hasProperty("email")));
+//        assertThat(exp, hasItems( 
+//                Matchers.<PersonDTO>hasProperty("email", is("email1"))
+//                
+//        )
+//        );
         
     }
 }

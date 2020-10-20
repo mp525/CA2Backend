@@ -33,23 +33,32 @@ public class PersonFacade {
 }
     public PersonDTO getByPhone(int phonenr){
         EntityManager enf= emf.createEntityManager();
+        Person result;
+        try{
         TypedQuery<Person> query = enf.createQuery(
-        "SELECT p FROM Phone p INNER JOIN p.person e WHERE e.number='"+ phonenr +"'", Person.class);
-        Person result = query.getSingleResult();
+        "SELECT p.person FROM Phone p INNER JOIN p.person pers WHERE p.number='"+ phonenr +"'", Person.class);
+        result = query.getSingleResult();
+        }finally{
+            enf.close();
+        }
+         
         return new PersonDTO(result);
     }
     
-    public List<PersonDTO> getAllByHobby(int hobby){
+    public List<PersonDTO> getAllByHobby(String hobby){
         EntityManager enf= emf.createEntityManager();
+        List<PersonDTO> listDTO;
+        try{
         TypedQuery<Person> query = enf.createQuery(
         "SELECT p FROM Person p INNER JOIN p.hobbies h WHERE h.name='"+hobby+"'", Person.class);
         List<Person> result = query.getResultList();
         PersonDTO pdto= new PersonDTO();
-        List<PersonDTO>listDTO= pdto.toDTO(result);
+        listDTO= pdto.toDTO(result);
+        }finally{
+            enf.close();
+        }
+         
     return listDTO;
     }
-    
-    public static void main(String[] args) {
-        instance.getByPhone(11111112);
-    }
+   
 }
