@@ -128,14 +128,11 @@ public List<PersonDTO> getAllByZip(String zip){
     
     public int countWithGivenHobby(String hobbyName) {
         EntityManager em = emf.createEntityManager();
-        try {
-            int personCount = (int) em.createQuery(
-            "SELECT COUNT(*) FROM PERSON JOIN HOBBY_PERSON ON HOBBY_PERSON.persons_ID = PERSON.ID WHERE HOBBY_PERSON.hobbies_NAME = '"+hobbyName+"'")
-            .getSingleResult();
-            return personCount;
-        } finally {
-            em.close();
-        }
+        TypedQuery<Hobby> query2 = em.createQuery("Select h from Hobby h where h.name = :name", Hobby.class);
+        query2.setParameter("name", hobbyName);
+        Hobby hobby = query2.getSingleResult();
+        int x = hobby.getPersons().size();
+        return x;
     }
     
     public PersonDTO deletePerson(int id) {
