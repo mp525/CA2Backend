@@ -81,8 +81,8 @@ public List<PersonDTO> getAllByZip(String zip){
         List<PersonDTO> persons = null;
         
         try{
-            TypedQuery<Person> query = em.createQuery("SELECT p FROM person p "
-                    + "JOIN p.address_id adr WHERE adr.CITYINFO_ZIPCODE= :zip", Person.class);
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p "
+                    + "JOIN p.address a WHERE a.cityInfo.zipCode = :zip", Person.class);
             query.setParameter("zip", zip);
             List<Person> list = query.getResultList();
             PersonDTO dto = new PersonDTO();
