@@ -35,27 +35,44 @@ public class PersonFacade {
             instance = new PersonFacade();
         }
         return instance;
-    }
 
-    public PersonDTO getByPhone(int phonenr) {
-        EntityManager enf = emf.createEntityManager();
+}
+    //Matti
+    public PersonDTO getByPhone(int phonenr){
+        EntityManager enf= emf.createEntityManager();
+        Person result;
+        try{
         TypedQuery<Person> query = enf.createQuery(
-                "SELECT p FROM Phone p INNER JOIN p.person e WHERE e.number='" + phonenr + "'", Person.class);
-        Person result = query.getSingleResult();
+
+        "SELECT p.person FROM Phone p INNER JOIN p.person pers WHERE p.number='"+ phonenr +"'", Person.class);
+        
+        result = query.getSingleResult();
+        }finally{
+            enf.close();
+        }
+
         return new PersonDTO(result);
     }
+    
+    public List<PersonDTO> getAllByHobby(String hobby){
+        EntityManager enf= emf.createEntityManager();
+        List<PersonDTO> listDTO;
+        try{
 
-    public List<PersonDTO> getAllByHobby(int hobby) {
-        EntityManager enf = emf.createEntityManager();
         TypedQuery<Person> query = enf.createQuery(
                 "SELECT p FROM Person p INNER JOIN p.hobbies h WHERE h.name='" + hobby + "'", Person.class);
 
         List<Person> result = query.getResultList();
-        PersonDTO pdto = new PersonDTO();
-        List<PersonDTO> listDTO = pdto.toDTO(result);
-        return listDTO;
-    }
 
+        PersonDTO pdto= new PersonDTO();
+        listDTO= pdto.toDTO(result);
+        }finally{
+            enf.close();
+        }
+         
+    return listDTO;
+    }
+    
     public PersonDTO editPerson(PersonDTO p) {
         EntityManager em = emf.createEntityManager();
         Person pFind = em.find(Person.class, p.getId());
@@ -69,6 +86,7 @@ public class PersonFacade {
             em.close();
         }
         return new PersonDTO(pFind);}
+
 
     public PersonDTO addPerson(PersonDTO p) {
         EntityManager em = emf.createEntityManager();
@@ -145,4 +163,5 @@ public class PersonFacade {
         }
         return new PersonDTO(person);
     }
+
 }

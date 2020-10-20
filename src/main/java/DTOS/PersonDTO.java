@@ -26,9 +26,9 @@ public class PersonDTO {
     }
 
     public PersonDTO(Person p) {
-        this.email = p.getEmail();
         this.firstName = p.getFirstName();
         this.lastName = p.getLastName();
+        this.email = p.getEmail();
         this.street = p.getAddress().getStreet();
         this.houseNr = p.getAddress().getHouseNr();
         this.zip = p.getAddress().getCityInfo().getZipCode();  
