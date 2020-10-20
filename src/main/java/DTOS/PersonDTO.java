@@ -5,6 +5,7 @@
  */
 package DTOS;
 
+import entities.Hobby;
 import entities.Person;
 import java.util.List;
 
@@ -21,14 +22,15 @@ public class PersonDTO {
     private String houseNr;
     private String zip;
     private String hobbyName;
+    private List<Hobby>hobbies;
 
     public PersonDTO() {
     }
 
     public PersonDTO(Person p) {
-        this.email = p.getEmail();
         this.firstName = p.getFirstName();
         this.lastName = p.getLastName();
+        this.email = p.getEmail();
         this.street = p.getAddress().getStreet();
         this.houseNr = p.getAddress().getHouseNr();
         this.zip = p.getAddress().getCityInfo().getZipCode();  
@@ -44,6 +46,15 @@ public class PersonDTO {
         this.zip = zip;
         this.hobbyName = hobbyName;
     }
+    public PersonDTO(String firstName, String lastName, String email, String street, String houseNr, String zip, List<Hobby> list) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.street = street;
+        this.houseNr = houseNr;
+        this.zip = zip;
+        this.hobbies = list;
+    }
     
     
     public List<PersonDTO>toDTO(List<Person>persons){
@@ -53,6 +64,15 @@ public class PersonDTO {
         }
          return dtoes;        
     }
+
+    public List<Hobby> getHobbies() {
+        return hobbies;
+    }
+
+    public void setHobbies(List<Hobby> hobbies) {
+        this.hobbies = hobbies;
+    }
+    
     public int getId() {
         return id;
     }

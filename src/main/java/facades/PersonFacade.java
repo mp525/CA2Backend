@@ -35,32 +35,48 @@ public class PersonFacade {
             instance = new PersonFacade();
         }
         return instance;
-    }
 
-    public PersonDTO getByPhone(int phonenr) {
-        EntityManager enf = emf.createEntityManager();
+}
+    //Matti
+    public PersonDTO getByPhone(int phonenr){
+        EntityManager enf= emf.createEntityManager();
+        Person p;
+        try{
         TypedQuery<Person> query = enf.createQuery(
-
-        "SELECT p FROM Phone p INNER JOIN p.person e WHERE e.number='"+ phonenr +"'", Person.class);
-
-        Person result = query.getSingleResult();
-        return new PersonDTO(result);
+        "SELECT p.person FROM Phone p INNER JOIN p.person pers WHERE p.number='"+ phonenr +"'", Person.class);
+        
+        p = query.getSingleResult();
+        }finally{
+            enf.close();
+        }
+         System.out.println(p);
+         System.out.println(p.getAddress().getStreet()+p.getAddress().getHouseNr());
+        return new PersonDTO(p.getFirstName(),p.getLastName(),p.getEmail(),p.getAddress().getStreet(),p.getAddress().getHouseNr(),p.getAddress().getCityInfo().getZipCode(),p.getHobbies());
     }
+    
+    public List<PersonDTO> getAllByHobby(String hobby){
+        EntityManager enf= emf.createEntityManager();
+        List<PersonDTO> listDTO;
+        try{
 
-    public List<PersonDTO> getAllByHobby(int hobby) {
-        EntityManager enf = emf.createEntityManager();
         TypedQuery<Person> query = enf.createQuery(
 
 
         "SELECT p FROM Person p INNER JOIN p.hobbies h WHERE h.name='"+hobby+"'", Person.class);
 
         List<Person> result = query.getResultList();
-        PersonDTO pdto = new PersonDTO();
-        List<PersonDTO> listDTO = pdto.toDTO(result);
-        return listDTO;
+
+
+        PersonDTO pdto= new PersonDTO();
+        listDTO= pdto.toDTO(result);
+        }finally{
+            enf.close();
+        }
+         
+    return listDTO;
     }
-    
-    public List<PersonDTO> getAllByZip(String zip){
+
+public List<PersonDTO> getAllByZip(String zip){
         EntityManager em = emf.createEntityManager();
         List<PersonDTO> persons = null;
         
@@ -78,7 +94,7 @@ public class PersonFacade {
         
         return persons;
     }
-
+//
     public PersonDTO addPerson(PersonDTO p) {
         EntityManager em = emf.createEntityManager();
         Person person = new Person(p.getFirstName(), p.getLastName(), p.getEmail());
@@ -108,9 +124,6 @@ public class PersonFacade {
         return p2;
     }
     
-    public static void main(String[] args) {
-        instance.getByPhone(11111112);
-    }
     
     public int countWithGivenHobby(String hobbyName) {
         EntityManager em = emf.createEntityManager();
@@ -146,4 +159,5 @@ public class PersonFacade {
         }
         return new PersonDTO(person);
     }
+
 }
