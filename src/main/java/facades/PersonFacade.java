@@ -100,7 +100,6 @@ public List<PersonDTO> getAllByZip(String zip){
         Person person = new Person(p.getFirstName(), p.getLastName(), p.getEmail());
         PersonDTO p2 = null;
         try {
-
             TypedQuery<CityInfo> query1 = em.createQuery("Select c from CityInfo c where c.zipCode = :zipcode", CityInfo.class);
             query1.setParameter("zipcode", p.getZip());
             CityInfo cityInfo = query1.getSingleResult();
@@ -109,8 +108,10 @@ public List<PersonDTO> getAllByZip(String zip){
             person.setAddress(address);
 
             TypedQuery<Hobby> query2 = em.createQuery("Select h from Hobby h where h.name = :name", Hobby.class);
+            System.out.println(p.getHobbyName());            
             query2.setParameter("name", p.getHobbyName());
             Hobby hobby = query2.getSingleResult();
+            System.out.println("hej");
             person.addHobby(hobby);
 
             em.getTransaction().begin();

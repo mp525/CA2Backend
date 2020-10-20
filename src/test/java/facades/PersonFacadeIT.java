@@ -90,7 +90,8 @@ public class PersonFacadeIT {
             em.createQuery("DELETE from Address").executeUpdate();
             em.createQuery("DELETE from CityInfo").executeUpdate();
             
-            
+            em.persist(h1);
+            em.persist(h2);
             em.persist(p1);
             em.persist(p2);
             em.persist(p3);
@@ -137,8 +138,11 @@ public class PersonFacadeIT {
     
     @Test
     public void testAddPerson(){
-        PersonDTO p = new PersonDTO(p1);
+        PersonDTO p = new PersonDTO("fName", "lName", "mailbro", "streets", "numberhouse", "2750", "dnd"); 
         PersonDTO result = facade.addPerson(p);
         assertEquals(p.getFirstName(), result.getFirstName());
     }
+    
+   
+    
 }
