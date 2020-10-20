@@ -35,6 +35,8 @@ public class PersonDTO {
         this.street = p.getAddress().getStreet();
         this.houseNr = p.getAddress().getHouseNr();
         this.zip = p.getAddress().getCityInfo().getZipCode();  
+        this.hobbies = p.getHobbies();
+        
         
     }
 

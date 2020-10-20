@@ -11,6 +11,7 @@ import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -24,7 +25,7 @@ import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
-
+import static org.hamcrest.Matchers.not;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -102,6 +103,12 @@ public class PersonFacadeIT {
             em.createQuery("DELETE from Address").executeUpdate();
             em.createQuery("DELETE from CityInfo").executeUpdate();
 
+
+
+            
+            em.persist(h1);
+            em.persist(h2);
+
             em.persist(p1);
             em.persist(p2);
             em.persist(p3);
@@ -117,35 +124,73 @@ public class PersonFacadeIT {
     }
 
     @Test
-
-    public void testGetByPhone() {
-
-        PersonDTO exp = facade.getByPhone(1);
-        System.out.println(exp);
-        String result = "fornavn";
-        assertEquals(result, exp.getFirstName());
+    public void testGetByPhone(){
+        
+        PersonDTO exp=facade.getByPhone(1);
+        String result="fornavn";
+        assertEquals(result,exp.getFirstName());
+        
 
     }
 
     @Test
-    public void testgetAllByHobby() {
+    public void testgetAllByHobby(){
+//        
+//       List<PersonDTO> exp=facade.getAllByHobby("dnd");
 
-//        List<PersonDTO> exp=facade.getAllByHobby("dnd");
 //        String result="fornavn";
 //         
-//        assertThat(exp, everyItem(hasProperty("email")));
+//       assertThat(exp, everyItem(hasProperty("email")));
 //        assertThat(exp, hasItems( 
 //                Matchers.<PersonDTO>hasProperty("email", is("email1"))
-//                
+//               
 //        )
-//       );
+
+
+//      );
+        
+
     }
 
     @Test
+
     public void testShowZips() {
         List<String> lissy = facade.showAllZips();
 
         assertNotNull(lissy);
+    }
+    
+    public void testCountWithGivenHobby() {
+        int res = facade.countWithGivenHobby("name");
+        int res2 = facade.countWithGivenHobby("dnd");
+        assertEquals(2,res);
+        assertEquals(1,res2);
+    }
+    
+    @Test
+    public void testDeletePerson() {
+        List<PersonDTO> listBefore = facade.getAllPersons();
+        int listBefNum = listBefore.size();
+
+        PersonDTO pDTO = facade.deletePerson(p3.getId());
+
+        List<PersonDTO> listAfter = facade.getAllPersons();
+        int listAftNum = listAfter.size();
+
+        assertEquals(3, listBefNum);
+        assertEquals(2, listAftNum);
+    }
+    
+    @Test
+    public void testGetAllPersons() {
+        List<PersonDTO> persons = facade.getAllPersons();
+        assertThat(persons, everyItem(hasProperty("firstName")));
+        assertThat(persons, hasItems(
+                Matchers.<PersonDTO>hasProperty("firstName", is("fornavn")),
+                Matchers.<PersonDTO>hasProperty("firstName", is("navn")),
+                Matchers.<PersonDTO>hasProperty("firstName", is("navnet"))
+        ));
+
     }
 
     @Test
@@ -168,10 +213,7 @@ public class PersonFacadeIT {
         assertEquals(pedit.getLastName(), pd2.getLastName());
     }
 
-    @Test
-    public void testCountWithGivenHobby() {
 
-    }
 
 //    @Test
 //    public void testAddPerson(){
@@ -179,4 +221,24 @@ public class PersonFacadeIT {
 //        PersonDTO result = facade.addPerson(p);
 //        assertEquals(p.getFirstName(), result.getFirstName());
 //    }
+
+    public void testAddPerson(){
+        PersonDTO p = new PersonDTO("fName", "lName", "mailbro", "streets", "numberhouse", "2750", "dnd"); 
+        PersonDTO result = facade.addPerson(p);
+        assertEquals(p.getFirstName(), result.getFirstName());
+    }
+    
+    @Test
+    public void testGetAllByZip(){
+        List<PersonDTO> resultList = facade.getAllByZip("2750");
+        System.out.println("All by zip: " + resultList);
+        assertThat(resultList, everyItem(hasProperty("zip")));
+        assertThat(resultList, hasItems( // or contains or containsInAnyOrder 
+                Matchers.<PersonDTO>hasProperty("zip", is("2750")),
+                Matchers.<PersonDTO>hasProperty("zip", is("2750")),
+                Matchers.<PersonDTO>hasProperty("zip", is("2750"))
+        )
+        );
+    }
+
 }
