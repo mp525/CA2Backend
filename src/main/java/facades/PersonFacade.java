@@ -35,7 +35,7 @@ public class PersonFacade {
     public PersonDTO getByPhone(int phonenr){
         EntityManager enf= emf.createEntityManager();
         TypedQuery<Person> query = enf.createQuery(
-        "SELECT p FROM Phone p INNER JOIN e.person e where e.number"+ phonenr +"", Person.class);
+        "SELECT p FROM Phone p INNER JOIN p.person e WHERE e.number='"+ phonenr +"'", Person.class);
         Person result = query.getSingleResult();
         return new PersonDTO(result);
     }
@@ -43,10 +43,14 @@ public class PersonFacade {
     public List<PersonDTO> getAllByHobby(int hobby){
         EntityManager enf= emf.createEntityManager();
         TypedQuery<Person> query = enf.createQuery(
-        "SELECT p FROM Person p INNER JOIN p.hobbies h where h.name"+hobby+"", Person.class);
+        "SELECT p FROM Person p INNER JOIN p.hobbies h WHERE h.name='"+hobby+"'", Person.class);
         List<Person> result = query.getResultList();
         PersonDTO pdto= new PersonDTO();
         List<PersonDTO>listDTO= pdto.toDTO(result);
     return listDTO;
+    }
+    
+    public static void main(String[] args) {
+        instance.getByPhone(11111112);
     }
 }
