@@ -7,6 +7,7 @@ package facades;
 
 import DTOS.PersonDTO;
 import entities.Address;
+import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
@@ -58,9 +59,9 @@ public class PersonFacadeIT {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
-        Person p1 = new Person("fornavn", "efternavn","email1");
-        Person p2 = new Person("navn", "navn2","email2");
-        Person p3 = new Person("navnet", "navnet2","email3");
+        Person p1 = new Person("fornavn", "efternavn", "email1");
+        Person p2 = new Person("navn", "navn2", "email2");
+        Person p3 = new Person("navnet", "navnet2", "email3");
         Phone ph1 = new Phone(1, "Home");
         Phone ph2 = new Phone(11111112, "Home");
         Phone ph3 = new Phone(11111113, "Home");
@@ -70,26 +71,25 @@ public class PersonFacadeIT {
 
         try {
 
-        Hobby h1 = new Hobby("name", "wikilink", "categoy", "type");
-        Hobby h2 = new Hobby("dnd", "wikilink", "categoy", "type");
-        Address a1 = new Address("Street", "2");
-        Address a2 = new Address("street2", "3");
-        Address a3 = new Address("street3", "4");
-        a1.addPerson(p1);
-        a1.addPerson(p2);
-        a2.addPerson(p3);
-        p1.addHobby(h1);
-        p1.addHobby(h2);
-        p3.addHobby(h1);
+            Hobby h1 = new Hobby("name", "wikilink", "categoy", "type");
+            Hobby h2 = new Hobby("dnd", "wikilink", "categoy", "type");
+            Address a1 = new Address("Street", "2");
+            Address a2 = new Address("street2", "3");
+            Address a3 = new Address("street3", "4");
+            a1.addPerson(p1);
+            a1.addPerson(p2);
+            a2.addPerson(p3);
+            p1.addHobby(h1);
+            p1.addHobby(h2);
+            p3.addHobby(h1);
 
             em.getTransaction().begin();
-            em.createQuery("DELETE from Phone").executeUpdate();   
+            em.createQuery("DELETE from Phone").executeUpdate();
             em.createQuery("DELETE from Person").executeUpdate();
             em.createQuery("DELETE from Hobby").executeUpdate();
-                    
+
             em.createQuery("DELETE from Address").executeUpdate();
-            
-            
+
             em.persist(p1);
             em.persist(p2);
             em.persist(p3);
@@ -104,20 +104,9 @@ public class PersonFacadeIT {
     public void tearDown() {
     }
 
-
-
     @Test
+    public void testgetAllByHobby() {
 
-    public void testGetByPhone(){
-        
-        PersonDTO exp=facade.getByPhone(1);
-        String result="fornavn";
-        assertEquals(result,exp.getFirstName());
-        
-    }
-    @Test
-    public void testgetAllByHobby(){
-        
 //        List<PersonDTO> exp=facade.getAllByHobby("dnd");
 //        String result="fornavn";
 //         
@@ -127,21 +116,32 @@ public class PersonFacadeIT {
 //                
 //        )
 //       );
-        
-
     }
-    
-     @Test
+
+    @Test
+    public void testShowZips() {
+        List<String> lissy = facade.showAllZips();
+
+        assertNotNull(lissy);
+    }
+
+    @Test
     public void testEditPersonDTO() {
-        
-        Person pEt = new Person("John", "Doe", "coll@mother.fucker");
+
+        Person pEt = new Person("Firstname", "Lastname", "nice@mail.dude");
+
+        CityInfo ci1 = new CityInfo();
+        Address a1 = new Address("Cool Street", "35");
+        a1.setCityInfo(ci1);
+        a1.addPerson(pEt);
+
         PersonDTO pd1 = new PersonDTO(pEt);
         pEt.setFirstName("Peter");
         PersonDTO pedit = facade.editPerson(new PersonDTO(pEt));
-        
-        assertThat(pEt.getFirstName(), is(not(pedit.getFirstName())));
-         assertEquals(pEt.getEmail(), pedit.getEmail());
-         assertEquals(pEt.getLastName(), pedit.getLastName());
+
+        assertThat(pd1.getFirstName(), is(not(pedit.getFirstName())));
+        assertEquals(pd1.getEmail(), pedit.getEmail());
+        assertEquals(pd1.getLastName(), pedit.getLastName());
     }
 
     @Test

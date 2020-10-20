@@ -11,6 +11,7 @@ import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -73,6 +74,8 @@ public class PersonFacade {
     return listDTO;
     }
     
+    
+    
     public PersonDTO editPerson(PersonDTO p) {
         EntityManager em = emf.createEntityManager();
         Person pFind = em.find(Person.class, p.getId());
@@ -86,6 +89,16 @@ public class PersonFacade {
             em.close();
         }
         return new PersonDTO(pFind);}
+    
+    
+    
+    public List<String> showAllZips() {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery tqh = em.createQuery("Select z.zipCode from CityInfo z", String.class);
+        List<String> zips = tqh.getResultList();
+        
+        return zips;
+    }
 
 
     public PersonDTO addPerson(PersonDTO p) {
