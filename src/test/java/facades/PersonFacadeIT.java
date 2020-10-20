@@ -75,6 +75,7 @@ public class PersonFacadeIT {
             em.getTransaction().begin();
             em.createQuery("DELETE from Phone").executeUpdate();   
             em.createQuery("DELETE from Person").executeUpdate();
+            em.createQuery("DELETE from Hobby").executeUpdate();
                     
             em.createQuery("DELETE from Address").executeUpdate();
             
