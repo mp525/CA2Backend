@@ -106,23 +106,22 @@ public class PersonFacadeIT {
     public void testGetByPhone(){
         
         PersonDTO exp=facade.getByPhone(1);
-        System.out.println(exp);
         String result="fornavn";
         assertEquals(result,exp.getFirstName());
         
     }
     @Test
     public void testgetAllByHobby(){
-        
-//        List<PersonDTO> exp=facade.getAllByHobby("dnd");
+//        
+//       List<PersonDTO> exp=facade.getAllByHobby("dnd");
 //        String result="fornavn";
 //         
-//        assertThat(exp, everyItem(hasProperty("email")));
+//       assertThat(exp, everyItem(hasProperty("email")));
 //        assertThat(exp, hasItems( 
 //                Matchers.<PersonDTO>hasProperty("email", is("email1"))
-//                
+//               
 //        )
-//       );
+//      );
         
     }
     

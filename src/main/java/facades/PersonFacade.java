@@ -49,8 +49,6 @@ public class PersonFacade {
         }finally{
             enf.close();
         }
-         System.out.println(p);
-         System.out.println(p.getAddress().getStreet()+p.getAddress().getHouseNr());
         return new PersonDTO(p.getFirstName(),p.getLastName(),p.getEmail(),p.getAddress().getStreet(),p.getAddress().getHouseNr(),p.getAddress().getCityInfo().getZipCode(),p.getHobbies());
     }
     
@@ -61,13 +59,15 @@ public class PersonFacade {
 
         TypedQuery<Person> query = enf.createQuery(
 
-
         "SELECT p FROM Person p INNER JOIN p.hobbies h WHERE h.name='"+hobby+"'", Person.class);
 
-        List<Person> result = query.getResultList();
-
+        List<Person> p = query.getResultList();
+            System.out.println("Get all hobby: her fra");
+            System.out.println(p);
         PersonDTO pdto= new PersonDTO();
-        listDTO= pdto.toDTO(result);
+        listDTO= pdto.toDTO(p);
+            System.out.println(listDTO);
+        System.out.println("her til");
         }finally{
             enf.close();
         }
