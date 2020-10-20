@@ -40,7 +40,12 @@ import utils.EMF_Creator;
 public class PersonFacadeIT {
 
     private static EntityManagerFactory emf;
+
     private static PersonFacade facade;
+
+    private Person p1;
+    private Person p2;
+    private Person p3;
 
     public PersonFacadeIT() {
     }
@@ -59,9 +64,11 @@ public class PersonFacadeIT {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
-        Person p1 = new Person("fornavn", "efternavn", "email1");
-        Person p2 = new Person("navn", "navn2", "email2");
-        Person p3 = new Person("navnet", "navnet2", "email3");
+
+        p1 = new Person("fornavn", "efternavn", "email1");
+        p2 = new Person("navn", "navn2", "email2");
+        p3 = new Person("navnet", "navnet2", "email3");
+
         Phone ph1 = new Phone(1, "Home");
         Phone ph2 = new Phone(11111112, "Home");
         Phone ph3 = new Phone(11111113, "Home");
@@ -71,21 +78,21 @@ public class PersonFacadeIT {
 
         Hobby h1 = new Hobby("name", "wikilink", "categoy", "type");
         Hobby h2 = new Hobby("dnd", "wikilink", "categoy", "type");
-        CityInfo cf = new CityInfo("2750","Ballerup");
+        CityInfo cf = new CityInfo("2750", "Ballerup");
         Address a1 = new Address("Street", "2");
         Address a2 = new Address("street2", "3");
         Address a3 = new Address("street3", "4");
         a1.setCityInfo(cf);
         a2.setCityInfo(cf);
         a3.setCityInfo(cf);
-        
+
         a1.addPerson(p1);
         a1.addPerson(p2);
         a2.addPerson(p3);
         p1.addHobby(h1);
         p1.addHobby(h2);
         p3.addHobby(h1);
-         try {
+        try {
 
             em.getTransaction().begin();
             em.createQuery("DELETE from Phone").executeUpdate();
@@ -94,8 +101,7 @@ public class PersonFacadeIT {
 
             em.createQuery("DELETE from Address").executeUpdate();
             em.createQuery("DELETE from CityInfo").executeUpdate();
-            
-            
+
             em.persist(p1);
             em.persist(p2);
             em.persist(p3);
@@ -112,17 +118,17 @@ public class PersonFacadeIT {
 
     @Test
 
-    public void testGetByPhone(){
-        
-        PersonDTO exp=facade.getByPhone(1);
+    public void testGetByPhone() {
+
+        PersonDTO exp = facade.getByPhone(1);
         System.out.println(exp);
-        String result="fornavn";
-        assertEquals(result,exp.getFirstName());
-        
+        String result = "fornavn";
+        assertEquals(result, exp.getFirstName());
+
     }
+
     @Test
-    public void testgetAllByHobby(){
-        
+    public void testgetAllByHobby() {
 
 //        List<PersonDTO> exp=facade.getAllByHobby("dnd");
 //        String result="fornavn";
@@ -144,20 +150,22 @@ public class PersonFacadeIT {
 
     @Test
     public void testEditPersonDTO() {
+//        CityInfo ci1 = new CityInfo("2383", "Super City");
+//        Address a1 = new Address("Cool Street", "35");
+//        Hobby h1 = new Hobby("Dnd", "dnd.com", "Nørdstas", type)
+//        a1.setCityInfo(ci1);
+//        a1.addPerson(pEt);
+        p1.setFirstName("Peter");
+        PersonDTO pd1 = new PersonDTO(p1);
 
-        Person pEt = new Person("Firstname", "Lastname", "nice@mail.dude");
+        p1.setFirstName("John");
+        PersonDTO pd2 = new PersonDTO(p1);
 
-        CityInfo ci1 = new CityInfo("2383", "Super City");
-        Address a1 = new Address("Cool Street", "35");
-        a1.setCityInfo(ci1);
-        a1.addPerson(pEt);
-        PersonDTO pd1 = new PersonDTO(pEt);
-        pEt.setFirstName("Peter");
-        PersonDTO pedit = facade.editPerson(new PersonDTO(pEt));
-        
-        assertThat(pd1.getFirstName(), is(not(pedit.getFirstName())));
-        assertEquals(pd1.getEmail(), pedit.getEmail());
-        assertEquals(pd1.getLastName(), pedit.getLastName());
+        PersonDTO pedit = facade.editPerson(pd1);
+
+        assertThat(pedit.getFirstName(), is(not(pd2.getFirstName())));
+        assertEquals(pedit.getEmail(), pd2.getEmail());
+        assertEquals(pedit.getLastName(), pd2.getLastName());
     }
 
     @Test
@@ -165,4 +173,10 @@ public class PersonFacadeIT {
 
     }
 
+//    @Test
+//    public void testAddPerson(){
+//        PersonDTO p = new PersonDTO(p1);
+//        PersonDTO result = facade.addPerson(p);
+//        assertEquals(p.getFirstName(), result.getFirstName());
+//    }
 }

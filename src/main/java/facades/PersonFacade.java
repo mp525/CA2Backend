@@ -68,6 +68,7 @@ public class PersonFacade {
 
         List<Person> result = query.getResultList();
 
+
         PersonDTO pdto= new PersonDTO();
         listDTO= pdto.toDTO(result);
         }finally{
@@ -76,6 +77,7 @@ public class PersonFacade {
          
     return listDTO;
     }
+
     
     
     
@@ -103,6 +105,26 @@ public class PersonFacade {
         return zips;
     }
 
+
+
+public List<PersonDTO> getAllByZip(String zip){
+        EntityManager em = emf.createEntityManager();
+        List<PersonDTO> persons = null;
+        
+        try{
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p "
+                    + "JOIN p.address a WHERE a.cityInfo.zipCode = :zip", Person.class);
+            query.setParameter("zip", zip);
+            List<Person> list = query.getResultList();
+            PersonDTO dto = new PersonDTO();
+            persons = dto.toDTO(list);
+        }
+        finally{
+            em.close();
+        }
+        
+        return persons;
+    }
 
     public PersonDTO addPerson(PersonDTO p) {
         EntityManager em = emf.createEntityManager();
@@ -134,6 +156,7 @@ public class PersonFacade {
 
     }
 
+
     public static void main(String[] args) {
         instance.getByPhone(11111112);
 
@@ -144,6 +167,7 @@ public class PersonFacade {
         
 
     }
+
 
     public int countWithGivenHobby(String hobbyName) {
         EntityManager em = emf.createEntityManager();

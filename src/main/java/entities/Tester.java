@@ -60,6 +60,7 @@ public class Tester {
         facade.addPerson(dto1);
         facade.editPerson(dtol2);
         
+        System.out.println(facade.getAllByZip("1011"));
 //        try {
 //            em.getTransaction().begin();
 //            em.persist(p1);
