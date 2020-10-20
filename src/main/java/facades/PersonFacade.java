@@ -59,6 +59,25 @@ public class PersonFacade {
         List<PersonDTO> listDTO = pdto.toDTO(result);
         return listDTO;
     }
+    
+    public List<PersonDTO> getAllByZip(String zip){
+        EntityManager em = emf.createEntityManager();
+        List<PersonDTO> persons = null;
+        
+        try{
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM person p "
+                    + "JOIN p.address_id adr WHERE adr.CITYINFO_ZIPCODE= :zip", Person.class);
+            query.setParameter("zip", zip);
+            List<Person> list = query.getResultList();
+            PersonDTO dto = new PersonDTO();
+            persons = dto.toDTO(list);
+        }
+        finally{
+            em.close();
+        }
+        
+        return persons;
+    }
 
     public PersonDTO addPerson(PersonDTO p) {
         EntityManager em = emf.createEntityManager();
