@@ -40,17 +40,18 @@ public class PersonFacade {
     //Matti
     public PersonDTO getByPhone(int phonenr){
         EntityManager enf= emf.createEntityManager();
-        Person result;
+        Person p;
         try{
         TypedQuery<Person> query = enf.createQuery(
         "SELECT p.person FROM Phone p INNER JOIN p.person pers WHERE p.number='"+ phonenr +"'", Person.class);
         
-        result = query.getSingleResult();
+        p = query.getSingleResult();
         }finally{
             enf.close();
         }
-         
-        return new PersonDTO(result);
+         System.out.println(p);
+         System.out.println(p.getAddress().getStreet()+p.getAddress().getHouseNr());
+        return new PersonDTO(p.getFirstName(),p.getLastName(),p.getEmail(),p.getAddress().getStreet(),p.getAddress().getHouseNr(),p.getAddress().getCityInfo().getZipCode(),p.getHobbies());
     }
     
     public List<PersonDTO> getAllByHobby(String hobby){

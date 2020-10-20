@@ -7,6 +7,7 @@ package facades;
 
 import DTOS.PersonDTO;
 import entities.Address;
+import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
@@ -62,9 +63,14 @@ public class PersonFacadeIT {
         p2.addPhone(ph3);
         Hobby h1 = new Hobby("name", "wikilink", "categoy", "type");
         Hobby h2 = new Hobby("dnd", "wikilink", "categoy", "type");
+        CityInfo cf = new CityInfo("2750","Ballerup");
         Address a1 = new Address("Street", "2");
         Address a2 = new Address("street2", "3");
         Address a3 = new Address("street3", "4");
+        a1.setCityInfo(cf);
+        a2.setCityInfo(cf);
+        a3.setCityInfo(cf);
+        
         a1.addPerson(p1);
         a1.addPerson(p2);
         a2.addPerson(p3);
@@ -78,6 +84,7 @@ public class PersonFacadeIT {
             em.createQuery("DELETE from Hobby").executeUpdate();
                     
             em.createQuery("DELETE from Address").executeUpdate();
+            em.createQuery("DELETE from CityInfo").executeUpdate();
             
             
             em.persist(p1);
@@ -99,6 +106,7 @@ public class PersonFacadeIT {
     public void testGetByPhone(){
         
         PersonDTO exp=facade.getByPhone(1);
+        System.out.println(exp);
         String result="fornavn";
         assertEquals(result,exp.getFirstName());
         
