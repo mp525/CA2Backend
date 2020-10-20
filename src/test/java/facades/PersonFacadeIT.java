@@ -144,6 +144,17 @@ public class PersonFacadeIT {
         assertEquals(p.getFirstName(), result.getFirstName());
     }
     
-   
+    @Test
+    public void testGetAllByZip(){
+        List<PersonDTO> resultList = facade.getAllByZip("2750");
+        System.out.println("All by zip: " + resultList);
+        assertThat(resultList, everyItem(hasProperty("zip")));
+        assertThat(resultList, hasItems( // or contains or containsInAnyOrder 
+                Matchers.<PersonDTO>hasProperty("zip", is("2750")),
+                Matchers.<PersonDTO>hasProperty("zip", is("2750")),
+                Matchers.<PersonDTO>hasProperty("zip", is("2750"))
+        )
+        );
+    }
     
 }
