@@ -67,6 +67,8 @@ public class PersonFacadeIT {
         p3.addHobby(h1);
          try {
             em.getTransaction().begin();
+            em.createQuery("DELETE from Phone").executeUpdate();
+            em.createQuery("DELETE from Address").executeUpdate();
             em.createQuery("DELETE from Person").executeUpdate();
             em.persist(p1);
             em.persist(p2);
@@ -103,6 +105,11 @@ public class PersonFacadeIT {
 //                
 //        )
 //        );
+        
+    }
+    
+    @Test
+    public void testCountWithGivenHobby() {
         
     }
 }

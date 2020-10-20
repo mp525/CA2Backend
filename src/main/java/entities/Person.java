@@ -39,12 +39,16 @@ public class Person implements Serializable {
     public Person() {
     }
 
-    public Person(String email, String firstName, String lastName) {
+    public Person(String firstName, String lastName, String email) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phones = new ArrayList();
         this.hobbies = new ArrayList();
+    }
+    
+    public List<Hobby> getHobbies(){
+        return hobbies;
     }
     
     public void addHobby(Hobby hobby){
