@@ -157,5 +157,16 @@ public List<PersonDTO> getAllByZip(String zip){
         }
         return new PersonDTO(person);
     }
+    
+    public List<PersonDTO> getAllPersons() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery tq = em.createQuery("SELECT p FROM Person p", Person.class);
+            List<PersonDTO> list = tq.getResultList();
+            return list;
+        } finally {
+            em.close();
+        }
+    }
 
 }

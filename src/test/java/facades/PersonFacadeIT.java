@@ -11,6 +11,7 @@ import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -20,6 +21,7 @@ import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -134,7 +136,34 @@ public class PersonFacadeIT {
     @Test
     public void testCountWithGivenHobby() {
         int res = facade.countWithGivenHobby("name");
+        int res2 = facade.countWithGivenHobby("dnd");
         assertEquals(2,res);
+        assertEquals(1,res2);
+    }
+    
+    @Test
+    public void testDeletePerson() {
+        List<PersonDTO> listBefore = facade.getAllPersons();
+        int listBefNum = listBefore.size();
+
+        PersonDTO pDTO = facade.deletePerson(p3.getId());
+
+        List<PersonDTO> listAfter = facade.getAllPersons();
+        int listAftNum = listAfter.size();
+
+        assertEquals(3, listBefNum);
+        assertEquals(2, listAftNum);
+    }
+    
+    @Test
+    public void testGetAllPersons() {
+        List<PersonDTO> persons = facade.getAllPersons();
+        assertThat(persons, everyItem(hasProperty("firstName")));
+        assertThat(persons, hasItems(
+                Matchers.<PersonDTO>hasProperty("firstName", is("fornavn")),
+                Matchers.<PersonDTO>hasProperty("firstName", is("navn")),
+                Matchers.<PersonDTO>hasProperty("firstName", is("navnet"))
+        ));
     }
     
     @Test
