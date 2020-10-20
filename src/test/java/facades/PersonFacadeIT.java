@@ -16,6 +16,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+
 import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItems;
@@ -35,80 +39,90 @@ import utils.EMF_Creator;
  * @author matti
  */
 public class PersonFacadeIT {
+
     private static EntityManagerFactory emf;
-        private static PersonFacade facade;
-        
-        private Person p1;
-        private Person p2;
-        private Person p3;
+
+    private static PersonFacade facade;
+
+    private Person p1;
+    private Person p2;
+    private Person p3;
+
     public PersonFacadeIT() {
     }
-    
+
     @BeforeAll
     public static void setUpClass() {
         emf = EMF_Creator.createEntityManagerFactoryForTest();
         EntityManager em = emf.createEntityManager();
-        facade=PersonFacade.getGMPFacade(emf);
+        facade = PersonFacade.getGMPFacade(emf);
     }
-    
+
     @AfterAll
     public static void tearDownClass() {
     }
-    
+
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
-        p1 = new Person("fornavn", "efternavn","email1");
-        p2 = new Person("navn", "navn2","email2");
-        p3 = new Person("navnet", "navnet2","email3");
+
+        p1 = new Person("fornavn", "efternavn", "email1");
+        p2 = new Person("navn", "navn2", "email2");
+        p3 = new Person("navnet", "navnet2", "email3");
+
         Phone ph1 = new Phone(1, "Home");
         Phone ph2 = new Phone(11111112, "Home");
         Phone ph3 = new Phone(11111113, "Home");
         p1.addPhone(ph1);
         p2.addPhone(ph2);
         p2.addPhone(ph3);
+
         Hobby h1 = new Hobby("name", "wikilink", "categoy", "type");
         Hobby h2 = new Hobby("dnd", "wikilink", "categoy", "type");
-        CityInfo cf = new CityInfo("2750","Ballerup");
+        CityInfo cf = new CityInfo("2750", "Ballerup");
         Address a1 = new Address("Street", "2");
         Address a2 = new Address("street2", "3");
         Address a3 = new Address("street3", "4");
         a1.setCityInfo(cf);
         a2.setCityInfo(cf);
         a3.setCityInfo(cf);
-        
+
         a1.addPerson(p1);
         a1.addPerson(p2);
         a2.addPerson(p3);
         p1.addHobby(h1);
         p1.addHobby(h2);
         p3.addHobby(h1);
-         try {
+        try {
+
             em.getTransaction().begin();
-            em.createQuery("DELETE from Phone").executeUpdate();   
+            em.createQuery("DELETE from Phone").executeUpdate();
             em.createQuery("DELETE from Person").executeUpdate();
             em.createQuery("DELETE from Hobby").executeUpdate();
-                    
+
             em.createQuery("DELETE from Address").executeUpdate();
             em.createQuery("DELETE from CityInfo").executeUpdate();
+
+
+
             
             em.persist(h1);
             em.persist(h2);
+
             em.persist(p1);
             em.persist(p2);
             em.persist(p3);
-            
+
             em.getTransaction().commit();
         } finally {
             em.close();
         }
     }
-    
+
     @AfterEach
     public void tearDown() {
     }
 
-    
     @Test
     public void testGetByPhone(){
         
@@ -116,9 +130,12 @@ public class PersonFacadeIT {
         String result="fornavn";
         assertEquals(result,exp.getFirstName());
         
+
     }
+
     @Test
     public void testgetAllByHobby(){
+
         
        List<PersonDTO> exp=facade.getAllByHobby("dnd");
         String result="fornavn";
@@ -129,10 +146,19 @@ public class PersonFacadeIT {
                
         )
       );
+
         
+
+    }
+
+    @Test
+
+    public void testShowZips() {
+        List<String> lissy = facade.showAllZips();
+
+        assertNotNull(lissy);
     }
     
-    @Test
     public void testCountWithGivenHobby() {
         int res = facade.countWithGivenHobby("name");
         int res2 = facade.countWithGivenHobby("dnd");
@@ -163,9 +189,38 @@ public class PersonFacadeIT {
                 Matchers.<PersonDTO>hasProperty("firstName", is("navn")),
                 Matchers.<PersonDTO>hasProperty("firstName", is("navnet"))
         ));
+
     }
-    
+
     @Test
+    public void testEditPersonDTO() {
+//        CityInfo ci1 = new CityInfo("2383", "Super City");
+//        Address a1 = new Address("Cool Street", "35");
+//        Hobby h1 = new Hobby("Dnd", "dnd.com", "Nørdstas", type)
+//        a1.setCityInfo(ci1);
+//        a1.addPerson(pEt);
+        p1.setFirstName("Peter");
+        PersonDTO pd1 = new PersonDTO(p1);
+
+        p1.setFirstName("John");
+        PersonDTO pd2 = new PersonDTO(p1);
+
+        PersonDTO pedit = facade.editPerson(pd1);
+
+        assertThat(pedit.getFirstName(), is(not(pd2.getFirstName())));
+        assertEquals(pedit.getEmail(), pd2.getEmail());
+        assertEquals(pedit.getLastName(), pd2.getLastName());
+    }
+
+
+
+//    @Test
+//    public void testAddPerson(){
+//        PersonDTO p = new PersonDTO(p1);
+//        PersonDTO result = facade.addPerson(p);
+//        assertEquals(p.getFirstName(), result.getFirstName());
+//    }
+
     public void testAddPerson(){
         PersonDTO p = new PersonDTO("fName", "lName", "mailbro", "streets", "numberhouse", "2750", "dnd"); 
         PersonDTO result = facade.addPerson(p);
@@ -184,5 +239,5 @@ public class PersonFacadeIT {
         )
         );
     }
-    
+
 }
