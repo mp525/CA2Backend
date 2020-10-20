@@ -88,14 +88,14 @@ public class PersonFacadeIT {
      @Test
     public void testEditPersonDTO() {
         
-        Person p1 = new Person("John", "Doe", "coll@mother.fucker");
-        PersonDTO pd1 = new PersonDTO(p1);
-        p1.setFirstName("Peter");
-        PersonDTO pedit = facade.editPerson(new PersonDTO(p1));
+        Person pEt = new Person("John", "Doe", "coll@mother.fucker");
+        PersonDTO pd1 = new PersonDTO(pEt);
+        pEt.setFirstName("Peter");
+        PersonDTO pedit = facade.editPerson(new PersonDTO(pEt));
         
-        assertThat(p1.getFirstName(), is(not(pedit.getFirstName())));
-         assertEquals(p1.getEmail(), pedit.getEmail());
-         assertEquals(p1.getLastName(), pedit.getLastName());
+        assertThat(pEt.getFirstName(), is(not(pedit.getFirstName())));
+         assertEquals(pEt.getEmail(), pedit.getEmail());
+         assertEquals(pEt.getLastName(), pedit.getLastName());
     }
 
     @Test
