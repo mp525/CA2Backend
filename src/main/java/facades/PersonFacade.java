@@ -58,22 +58,17 @@ public class PersonFacade {
 
     public PersonDTO editPerson(PersonDTO p) {
         EntityManager em = emf.createEntityManager();
-
         Person pFind = em.find(Person.class, p.getId());
-
         try {
             em.getTransaction().begin();
             pFind.setFirstName(p.getFirstName());
             pFind.setLastName(p.getLastName());
             pFind.setEmail(p.getEmail());
             em.getTransaction().commit();
-
         } finally {
             em.close();
-
         }
-        return new PersonDTO(pFind);
-    }
+        return new PersonDTO(pFind);}
 
     public PersonDTO addPerson(PersonDTO p) {
         EntityManager em = emf.createEntityManager();
@@ -109,8 +104,10 @@ public class PersonFacade {
         instance.getByPhone(11111112);
 
         Person p1 = new Person("cool@dude.yeah", "Niels", "Petersen");
-
         PersonDTO pD1 = new PersonDTO(p1);
+        Address a1 = new Address("Coolstreet", "342");
+//                pD1.editPerson();
+        
 
     }
 

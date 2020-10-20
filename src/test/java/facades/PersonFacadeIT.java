@@ -10,6 +10,9 @@ import entities.Person;
 import entities.Phone;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,22 +26,24 @@ import utils.EMF_Creator;
  * @author matti
  */
 public class PersonFacadeIT {
+
     private static EntityManagerFactory emf;
-        private static PersonFacade facade;
+    private static PersonFacade facade;
+
     public PersonFacadeIT() {
     }
-    
+
     @BeforeAll
     public static void setUpClass() {
         emf = EMF_Creator.createEntityManagerFactoryForTest();
         EntityManager em = emf.createEntityManager();
-        facade=PersonFacade.getGMPFacade(emf);
+        facade = PersonFacade.getGMPFacade(emf);
     }
-    
+
     @AfterAll
     public static void tearDownClass() {
     }
-    
+
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
@@ -51,38 +56,51 @@ public class PersonFacadeIT {
         p1.addPhone(ph1);
         p2.addPhone(ph2);
         p2.addPhone(ph3);
-         try {
+        try {
             em.getTransaction().begin();
+            em.createQuery("DELETE from Phone").executeUpdate();
+            em.createQuery("DELETE from Address").executeUpdate();
             em.createQuery("DELETE from Person").executeUpdate();
             em.persist(p1);
             em.persist(p2);
             em.persist(p3);
-            
+
             em.getTransaction().commit();
         } finally {
             em.close();
         }
     }
-    
+
     @AfterEach
     public void tearDown() {
     }
 
-    
+
+
     @Test
-    public void testGetByPhone(){
-        
+    public void testGetByPhone() {
+
 //        PersonDTO exp=facade.getByPhone(1);
 //        String result="fornavn";
 //        assertEquals(result,exp.getFirstName());
-        
     }
     
-    
-    
+     @Test
+    public void testEditPersonDTO() {
+        
+        Person p1 = new Person("John", "Doe", "coll@mother.fucker");
+        PersonDTO pd1 = new PersonDTO(p1);
+        p1.setFirstName("Peter");
+        PersonDTO pedit = facade.editPerson(new PersonDTO(p1));
+        
+        assertThat(p1.getFirstName(), is(not(pedit.getFirstName())));
+         assertEquals(p1.getEmail(), pedit.getEmail());
+         assertEquals(p1.getLastName(), pedit.getLastName());
+    }
+
     @Test
-    public void testEditPersonDTO(){
-        
+    public void testCountWithGivenHobby() {
+
     }
-    
+
 }

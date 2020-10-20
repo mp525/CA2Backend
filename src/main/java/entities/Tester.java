@@ -50,10 +50,15 @@ public class Tester {
 //        p1.addHobby(h1);
 //        p1.addHobby(h2);
 //        p3.addHobby(h1);
+
+        Person p1 = new Person("email1", "fornavn", "efternavn");
+
 //String email, String firstName, String lastName, String street, String houseNr, int zip, String hobbyName
         PersonDTO dto1 = new PersonDTO("mail2", "firstName2", "lastName2", "Street2", "houseNr2", "1011", "Animation");
+        PersonDTO dtol2 = new PersonDTO(p1);
         PersonFacade facade = PersonFacade.getGMPFacade(emf);
         facade.addPerson(dto1);
+        facade.editPerson(dtol2);
         
 //        try {
 //            em.getTransaction().begin();
