@@ -11,6 +11,7 @@ import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
+import exceptions.PersonNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -52,9 +53,6 @@ public class PersonFacade {
             enf.close();
         }
 
-
-         
-        
         System.out.println(p);
         System.out.println(p.getAddress().getStreet() + p.getAddress().getHouseNr());
 
@@ -86,17 +84,23 @@ public class PersonFacade {
         return listDTO;
     }
 
-    public PersonDTO editPerson(PersonDTO p) {
+    public PersonDTO editPerson(PersonDTO p) throws PersonNotFoundException {
         EntityManager em = emf.createEntityManager();
+//              TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.id =:" + p.getId() + "", Person.class);
         Person pFind = em.find(Person.class, p.getId());
-        try {
-            em.getTransaction().begin();
-            pFind.setFirstName(p.getFirstName());
-            pFind.setLastName(p.getLastName());
-            pFind.setEmail(p.getEmail());
-            em.getTransaction().commit();
-        } finally {
-            em.close();
+        if (pFind == null) {
+            throw new PersonNotFoundException(String.format("Person not found, so they coulden't be edited", pFind.toString()));
+        } else {
+
+            try {
+                em.getTransaction().begin();
+                pFind.setFirstName(p.getFirstName());
+                pFind.setLastName(p.getLastName());
+                pFind.setEmail(p.getEmail());
+                em.getTransaction().commit();
+            } finally {
+                em.close();
+            }
         }
         return new PersonDTO(pFind);
     }
@@ -171,8 +175,6 @@ public class PersonFacade {
     public int countWithGivenHobby(String hobbyName) {
         EntityManager em = emf.createEntityManager();
 
-        
-        
         try {
             int personCount = (int) em.createQuery(
                     "SELECT COUNT(*) FROM PERSON JOIN HOBBY_PERSON ON HOBBY_PERSON.persons_ID = PERSON.ID WHERE HOBBY_PERSON.hobbies_NAME = '" + hobbyName + "'")
@@ -181,7 +183,6 @@ public class PersonFacade {
         } finally {
             em.close();
         }
-         
 
     }
 

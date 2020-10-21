@@ -11,6 +11,7 @@ import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
+import exceptions.PersonNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -69,6 +70,7 @@ public class PersonFacadeIT {
         p1 = new Person("fornavn", "efternavn", "email1");
         p2 = new Person("navn", "navn2", "email2");
         p3 = new Person("navnet", "navnet2", "email3");
+        
 
         Phone ph1 = new Phone(1, "Home");
         Phone ph2 = new Phone(11111112, "Home");
@@ -109,6 +111,8 @@ public class PersonFacadeIT {
             em.persist(h1);
             em.persist(h2);
 
+             p1.setId(19);
+            
             em.persist(p1);
             em.persist(p2);
             em.persist(p3);
@@ -194,23 +198,25 @@ public class PersonFacadeIT {
     }
 
     @Test
-    public void testEditPersonDTO() {
+    public void testEditPersonDTO() throws PersonNotFoundException {
 //        CityInfo ci1 = new CityInfo("2383", "Super City");
 //        Address a1 = new Address("Cool Street", "35");
 //        Hobby h1 = new Hobby("Dnd", "dnd.com", "Nørdstas", type)
 //        a1.setCityInfo(ci1);
 //        a1.addPerson(pEt);
-        p1.setFirstName("Peter");
+        
+        p1.setFirstName("Niels");
         PersonDTO pd1 = new PersonDTO(p1);
 
-        p1.setFirstName("John");
+        p1.setFirstName("Mandibles");
         PersonDTO pd2 = new PersonDTO(p1);
+        System.out.println("Here is the DTO" + pd1.toString());
 
-        PersonDTO pedit = facade.editPerson(pd1);
+        pd1 = facade.editPerson(pd1);
 
-        assertThat(pedit.getFirstName(), is(not(pd2.getFirstName())));
-        assertEquals(pedit.getEmail(), pd2.getEmail());
-        assertEquals(pedit.getLastName(), pd2.getLastName());
+        assertThat(pd1.getFirstName(), is(not(pd2.getFirstName())));
+        assertEquals(pd1.getEmail(), pd2.getEmail());
+        assertEquals(pd1.getLastName(), pd2.getLastName());
     }
 
 

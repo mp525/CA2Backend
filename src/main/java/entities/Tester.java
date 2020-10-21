@@ -6,6 +6,7 @@
 package entities;
 
 import DTOS.PersonDTO;
+import exceptions.PersonNotFoundException;
 
 import facades.PersonFacade;
 
@@ -19,7 +20,7 @@ import utils.EMF_Creator;
  */
 public class Tester {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws PersonNotFoundException {
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
 
