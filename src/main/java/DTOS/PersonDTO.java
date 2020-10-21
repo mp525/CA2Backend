@@ -10,6 +10,7 @@ import entities.Person;
 import entities.Phone;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -194,6 +195,75 @@ public class PersonDTO {
     @Override
     public String toString() {
         return "PersonDTO{" + "id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName + ", street=" + street + ", houseNr=" + houseNr + ", zip=" + zip + ", hobbyName=" + hobbyName + ", hobbies=" + hobbies + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 11 * hash + this.id;
+        hash = 11 * hash + Objects.hashCode(this.email);
+        hash = 11 * hash + Objects.hashCode(this.firstName);
+        hash = 11 * hash + Objects.hashCode(this.lastName);
+        hash = 11 * hash + Objects.hashCode(this.street);
+        hash = 11 * hash + Objects.hashCode(this.houseNr);
+        hash = 11 * hash + Objects.hashCode(this.zip);
+        hash = 11 * hash + this.phoneNr;
+        hash = 11 * hash + Objects.hashCode(this.phoneDisc);
+        hash = 11 * hash + Objects.hashCode(this.phones);
+        hash = 11 * hash + Objects.hashCode(this.hobbyName);
+        hash = 11 * hash + Objects.hashCode(this.hobbies);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PersonDTO other = (PersonDTO) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (this.phoneNr != other.phoneNr) {
+            return false;
+        }
+        if (!Objects.equals(this.email, other.email)) {
+            return false;
+        }
+        if (!Objects.equals(this.firstName, other.firstName)) {
+            return false;
+        }
+        if (!Objects.equals(this.lastName, other.lastName)) {
+            return false;
+        }
+        if (!Objects.equals(this.street, other.street)) {
+            return false;
+        }
+        if (!Objects.equals(this.houseNr, other.houseNr)) {
+            return false;
+        }
+        if (!Objects.equals(this.zip, other.zip)) {
+            return false;
+        }
+        if (!Objects.equals(this.phoneDisc, other.phoneDisc)) {
+            return false;
+        }
+        if (!Objects.equals(this.hobbyName, other.hobbyName)) {
+            return false;
+        }
+        if (!Objects.equals(this.phones, other.phones)) {
+            return false;
+        }
+        if (!Objects.equals(this.hobbies, other.hobbies)) {
+            return false;
+        }
+        return true;
     }
 
 }

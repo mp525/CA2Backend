@@ -15,6 +15,7 @@ import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
 import io.restassured.parsing.Parser;
 import java.net.URI;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.UriBuilder;
@@ -22,9 +23,12 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import org.junit.jupiter.api.AfterAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -142,5 +146,32 @@ public class PersonResourceTest {
                 .body("count", equalTo(1));
     }
 
-    
+    @Test
+    public void testFindByPhone() {
+         given()
+         .get("person/id/1")
+         .then()
+         .assertThat()
+         .body("firstName", equalTo("fornavn"));      
+    }
+//person/byhobby/Animation
+    @Test
+    public void testFindbyhobby() {
+          List<PersonDTO> personsDTOs;
+        personsDTOs = given()
+                .contentType("application/json")
+                .when()
+                .get("person/byhobby/dnd")
+                .then()
+                .extract().body().jsonPath().getList("",PersonDTO.class);
+        PersonDTO p1DTO = new PersonDTO(p1);
+        PersonDTO p2DTO = new PersonDTO(p2);
+        System.out.println("______");
+        System.out.println("What i get "+personsDTOs.get(0));
+        PersonDTO p=personsDTOs.get(0);
+        System.out.println("What i want "+p1DTO);
+        assertEquals(p.getEmail(),p1DTO.getEmail());
+        assertEquals(p.getLastName(),p1DTO.getLastName());
+        assertEquals(p.getFirstName(),p1DTO.getFirstName());
+    }
 }
