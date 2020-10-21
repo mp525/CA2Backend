@@ -5,8 +5,10 @@
  */
 package rest;
 
+import DTOS.PersonDTO;
 import entities.Person;
 import io.restassured.RestAssured;
+import static io.restassured.RestAssured.given;
 import io.restassured.parsing.Parser;
 import java.net.URI;
 import javax.persistence.EntityManager;
@@ -15,12 +17,11 @@ import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.junit.jupiter.api.AfterEach;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import utils.EMF_Creator;
 
 /**
@@ -76,9 +77,17 @@ public class PersonResourceTest {
         }
     }
 
-    @Test
-    public void test(){
-        
+    //@Test
+    public void testAddPerson() {
+        given()
+                .contentType("application/json")
+                .body(new PersonDTO())
+                .when()
+                .post("person")
+                .then()
+                .body("firstName", equalTo("bip"))
+                .body("lastName", equalTo("bop"))
+                .body("id", notNullValue());
     }
 
     
