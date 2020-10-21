@@ -9,6 +9,7 @@ import DTOS.PersonDTO;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
+import exceptions.PersonNotFoundException;
 import facades.PersonFacade;
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class PersonResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String updatePerson(@PathParam("id") int id, String p) throws NullPointerException {
+    public String updatePerson(@PathParam("id") int id, String p) throws NullPointerException, PersonNotFoundException {
         PersonDTO person = GSON.fromJson(p, PersonDTO.class);
         
         person.setId(id);
@@ -111,6 +112,17 @@ public class PersonResource {
         String json = GSON.toJson(dto);
         return json;
     }
+    
+    @Path("allWithZip/{zip}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String allWithZip(@PathParam("zip") String zip){
+        List<PersonDTO> list = FACADE.getAllByZip(zip);
+        String json = GSON.toJson(list);
+        return json;
+    }
+    
+    
 
     
 }
