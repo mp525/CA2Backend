@@ -6,16 +6,19 @@
 package rest;
 
 import DTOS.PersonDTO;
+
 import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
 import exceptions.PersonNotFoundException;
 import facades.PersonFacade;
+
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
@@ -30,10 +33,12 @@ import utils.EMF_Creator;
 @Path("person")
 public class PersonResource {
 
+
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
 
     private static final PersonFacade FACADE = PersonFacade.getGMPFacade(EMF);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
 
     Gson g;
     @Context
@@ -47,16 +52,22 @@ public class PersonResource {
 
     /**
      * Retrieves representation of an instance of rest.PersonResource
-     *
+
+*
      * @return an instance of java.lang.String
      */
-    @Path("/allbyhobby/{hobbyID}")
+    @Path("byhobby/{hobbyID}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getJson() {
+
+    public String getJson(@PathParam("hobbyID")String hobbyID) {
+        
+//        List<PersonDTO> p =FACADE.getAllByHobby(hobbyID);
+//        return new Gson().toJson(p);
 
         return null;
 
+    
     }
 
     @PUT
@@ -69,15 +80,38 @@ public class PersonResource {
         person.setId(id);
         PersonDTO edited = FACADE.editPerson(person);
         return GSON.toJson(edited);
+
+    }
+    @Path("id/{id}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getPersonByPhone(@PathParam("id")int id) {
+//       PersonDTO p = FACADE.getByPhone(id);
+//        
+//        return new Gson().toJson(p);
+
+        return null;
+
+    }
+    
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String show(){
+        
+        
+        return "Shit work ma dude";
+        
+    }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String addPerson(String person){
+        PersonDTO personDTO = GSON.fromJson(person, PersonDTO.class);
+        PersonDTO dto = FACADE.addPerson(personDTO);
+        String json = GSON.toJson(dto);
+        return json;
     }
 
-    /**
-     * PUT method for updating or creating an instance of PersonResource
-     *
-     * @param content representation for the resource
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void putJson(String content) {
-    }
+    
 }
