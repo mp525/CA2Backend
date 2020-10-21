@@ -7,6 +7,7 @@ package DTOS;
 
 import entities.Hobby;
 import entities.Person;
+import entities.Phone;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,9 @@ public class PersonDTO {
     private String street;
     private String houseNr;
     private String zip;
-    //private String phone;
+    private int phoneNr;
+    private String phoneDisc;
+    private List<PhoneDTO> phones;
     private String hobbyName;
     private List<HobbyDTO> hobbies;
 
@@ -45,6 +48,10 @@ public class PersonDTO {
         this.hobbies = new ArrayList();
         for (Hobby hobby : p.getHobbies()) {
             this.hobbies.add(new HobbyDTO(hobby));
+        }
+        this.phones = new ArrayList();
+        for (Phone phone : p.getPhones()) {
+            this.phones.add(new PhoneDTO(phone));
         }
         
 
@@ -73,9 +80,39 @@ public class PersonDTO {
         this.hobbies = list;
     }
 
-    public List<PersonDTO> toDTO(List<Person> persons) {
-        List<PersonDTO> dtoes = new ArrayList();
-        for (Person p : persons) {
+
+    public List<PhoneDTO> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<PhoneDTO> phones) {
+        this.phones = phones;
+    }
+
+    public int getPhoneNr() {
+        return phoneNr;
+    }
+
+    public void setPhoneNr(int phoneNr) {
+        this.phoneNr = phoneNr;
+    }
+
+    public String getPhoneDisc() {
+        return phoneDisc;
+    }
+
+    public void setPhoneDisc(String phoneDisc) {
+        this.phoneDisc = phoneDisc;
+    }
+    
+    
+    
+    
+    
+    public List<PersonDTO>toDTO(List<Person>persons){
+        List<PersonDTO>dtoes = new ArrayList();
+        for(Person p: persons){
+
             dtoes.add(new PersonDTO(p));
         }
         return dtoes;
