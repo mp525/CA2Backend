@@ -25,14 +25,14 @@ public class Tester {
         EntityManager em = emf.createEntityManager();
 
 
-        Person p1 = new Person("email1", "fornavn", "efternavn");
-        Person p2 = new Person("email2", "navn", "navn2");
-        Person p3 = new Person("email3", "navnet", "navnet2");
+        Person p1 = new Person("Logan", "Sanders", "logic@gmail.com");
+        Person p2 = new Person("Adelaide", "Nightingale", "dark@gmail.com");
+        Person p3 = new Person("Henry", "Jekyll", "Edward@Hyde.com");
         CityInfo cf = new CityInfo("2750","Ballerup");
 
-        Address a1 = new Address("Street", "info");
-        Address a2 = new Address("street2", "info2");
-        Address a3 = new Address("street3", "info3");
+        Address a1 = new Address("Street", "3");
+        Address a2 = new Address("street2", "33");
+        Address a3 = new Address("street3", "44");
         
         a1.addPerson(p1);
         a1.addPerson(p2);
@@ -46,7 +46,7 @@ public class Tester {
         p2.addPhone(ph2);
         p2.addPhone(ph3);
         
-        Hobby h1 = new Hobby("name", "wikilink", "categoy", "type");
+        Hobby h1 = new Hobby("knitting", "wikilink", "categoy", "type");
         Hobby h2 = new Hobby("dnd", "wikilink", "categoy", "type");
         
         p1.addHobby(h1);
@@ -85,11 +85,11 @@ public class Tester {
         //Person p1 = new Person("email1", "fornavn", "efternavn");
 
 //String email, String firstName, String lastName, String street, String houseNr, int zip, String hobbyName
-        PersonDTO dto1 = new PersonDTO("mail2", "firstName2", "lastName2", "Street2", "houseNr2", "1011", "Animation");
-        PersonDTO dtol2 = new PersonDTO(p1);
-        PersonFacade facade = PersonFacade.getGMPFacade(emf);
-        facade.addPerson(dto1);
-        facade.editPerson(dtol2);
+//        PersonDTO dto1 = new PersonDTO("mail2", "firstName2", "lastName2", "Street2", "houseNr2", "1011", "Animation");
+//        PersonDTO dtol2 = new PersonDTO(p1);
+//        PersonFacade facade = PersonFacade.getGMPFacade(emf);
+//        facade.addPerson(dto1);
+//        facade.editPerson(dtol2);
 
          a1.setCityInfo(cf);
         a2.setCityInfo(cf);
