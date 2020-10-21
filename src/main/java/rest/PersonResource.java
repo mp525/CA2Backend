@@ -128,7 +128,8 @@ public class PersonResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String countWithGivenHobby(@PathParam("hobbyName") String hobbyName) {
         int count = FACADE.countWithGivenHobby(hobbyName);
-        return GSON.toJson(count);
+        //return GSON.toJson(count);
+        return "{\"count\":" + count + "}";
     }
     
     @DELETE

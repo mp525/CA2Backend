@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import static org.hamcrest.Matchers.equalTo;
@@ -129,6 +130,16 @@ public class PersonResourceTest {
                 .body("firstName", equalTo("LaterPostBoy"))
                 .body("lastName", equalTo("Jensen"))
                 .body("id", notNullValue());
+    }
+    
+    @Test
+    public void testCountByHobby() {
+        given()
+                .get("/person/countByHobby/dnd")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("count", equalTo(1));
     }
 
     

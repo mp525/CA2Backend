@@ -227,13 +227,24 @@ public class PersonFacade {
         } else {
             try {
                 em.getTransaction().begin();
-                em.remove(person);
                 //Delete all phone numbers associated with person
                 List<Phone> phones = person.getPhones();
                 for (Phone phone : phones) {
                     em.remove(phone);
                 }
+                
+                //Delete address if no one else lives there - Help!!
+//                List<Person> x = person.getAddress().getPersons();
+//                if(x.size() == 1) {
+//                    em.remove(person.getAddress());
+//                }
+                
+                person.getAddress().removePerson(person);
+                if(person.getAddress().getPersons().isEmpty()){
+                    em.remove(person.getAddress());
+                }
 
+                em.remove(person);
                 em.getTransaction().commit();
             } finally {
                 em.close();
