@@ -5,7 +5,9 @@
  */
 package facades;
 
+import DTOS.HobbyDTO;
 import DTOS.PersonDTO;
+import DTOS.PhoneDTO;
 import entities.Address;
 import entities.CityInfo;
 import entities.Hobby;
@@ -58,8 +60,13 @@ public class PersonFacade {
         
         System.out.println(p);
         System.out.println(p.getAddress().getStreet() + p.getAddress().getHouseNr());
+        
+        List<HobbyDTO> list2 = new ArrayList();
+        for (Hobby h : p.getHobbies()) {
+            list2.add(new HobbyDTO(h));
+        }
 
-        return new PersonDTO(p.getFirstName(), p.getLastName(), p.getEmail(), p.getAddress().getStreet(), p.getAddress().getHouseNr(), p.getAddress().getCityInfo().getZipCode(), p.getHobbies());
+        return new PersonDTO(p.getFirstName(), p.getLastName(), p.getEmail(), p.getAddress().getStreet(), p.getAddress().getHouseNr(), p.getAddress().getCityInfo().getZipCode(), list2);
 
     }
 
@@ -146,9 +153,26 @@ public class PersonFacade {
             Hobby hobby = query2.getSingleResult();
             System.out.println("hej");
             person.addHobby(hobby);
+            
+
+            Phone phone = new Phone(p.getPhoneNr(), p.getPhoneDisc());
+            person.addPhone(phone);
+            
+//            TypedQuery<Phone> query3 = em.createQuery("Select p from Phone p where p.person.id = :id", Phone.class);
+//            query3.setParameter("id", person.getId());
+//            List<Phone> phones = query3.getResultList();
+//            
+//            for (PhoneDTO pdto : p.getPhones()) {
+//                person.addPhone(new Phone(pdto.getNumber(), pdto.getDescription()));
+//            }
 
             em.getTransaction().begin();
             em.persist(person);
+            
+//            TypedQuery<Phone> query3 = em.createQuery("Select p from Phone p where p.person.id = :id", Phone.class);
+//            query3.setParameter("id", person.getId());
+//            List<Phone> phones = query3.getResultList();
+            
             em.getTransaction().commit();
             p2 = new PersonDTO(person);
 
