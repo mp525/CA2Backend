@@ -111,7 +111,6 @@ public class PersonFacadeIT {
             em.persist(h1);
             em.persist(h2);
 
-             p1.setId(19);
             
             em.persist(p1);
             em.persist(p2);

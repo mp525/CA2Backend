@@ -63,8 +63,11 @@ public class PersonFacade {
         for (Hobby h : p.getHobbies()) {
             list2.add(new HobbyDTO(h));
         }
-
-        return new PersonDTO(p.getFirstName(), p.getLastName(), p.getEmail(), p.getAddress().getStreet(), p.getAddress().getHouseNr(), p.getAddress().getCityInfo().getZipCode(), list2);
+        List<PhoneDTO> list3 = new ArrayList();
+        for (Phone ph : p.getPhones()) {
+            list3.add(new PhoneDTO(ph));
+        }
+        return new PersonDTO(p.getFirstName(), p.getLastName(), p.getEmail(), p.getAddress().getStreet(), p.getAddress().getHouseNr(), p.getAddress().getCityInfo().getZipCode(), list2,list3);
 
     }
 
