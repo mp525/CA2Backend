@@ -26,6 +26,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import utils.EMF_Creator;
 
 /**
@@ -117,16 +118,16 @@ public class PersonResourceTest {
     }
     
 
-    //@Test
+    @Test
     public void testAddPerson() {
         given()
-                .contentType("application/json")
-                .body(new PersonDTO())
+                .contentType("application/json")//String firstName, String lastName, String email, String street, String houseNr, String zip, String hobbyName, int phoneNr, String phoneDisc
+                .body(new PersonDTO("LaterPostBoy", "Jensen", "postemail", "nyby 22", "21a", "2750", "dnd", 21213030, "homephone"))
                 .when()
                 .post("person")
                 .then()
-                .body("firstName", equalTo("bip"))
-                .body("lastName", equalTo("bop"))
+                .body("firstName", equalTo("LaterPostBoy"))
+                .body("lastName", equalTo("Jensen"))
                 .body("id", notNullValue());
     }
 
