@@ -202,33 +202,49 @@ public class PersonFacade {
 
     public int countWithGivenHobby(String hobbyName) {
         EntityManager em = emf.createEntityManager();
+        
+        Hobby hobby = em.find(Hobby.class, hobbyName);
+        List<Person> list = hobby.getPersons();
+        int count = list.size();
+        return count;
 
-        try {
-            int personCount = (int) em.createQuery(
-                    "SELECT COUNT(*) FROM PERSON JOIN HOBBY_PERSON ON HOBBY_PERSON.persons_ID = PERSON.ID WHERE HOBBY_PERSON.hobbies_NAME = '" + hobbyName + "'")
-                    .getSingleResult();
-            return personCount;
-        } finally {
-            em.close();
-        }
+//        try {
+//            int personCount = (int) em.createQuery(
+//                    "SELECT COUNT(*) FROM PERSON JOIN HOBBY_PERSON ON HOBBY_PERSON.persons_ID = PERSON.ID WHERE HOBBY_PERSON.hobbies_NAME = '" + hobbyName + "'")
+//                    .getSingleResult();
+//            return personCount;
+//        } finally {
+//            em.close();
+//        }
 
     }
 
-    public PersonDTO deletePerson(int id) {
+    public PersonDTO deletePerson(int id) throws PersonNotFoundException {
         EntityManager em = emf.createEntityManager();
         Person person = em.find(Person.class, id);
         if (person == null) {
-            System.out.println("Error, make exception!!");
+            throw new PersonNotFoundException(String.format("Could not delete, id: %d not found", id));
         } else {
             try {
                 em.getTransaction().begin();
-                em.remove(person);
                 //Delete all phone numbers associated with person
                 List<Phone> phones = person.getPhones();
                 for (Phone phone : phones) {
                     em.remove(phone);
                 }
+                
+                //Delete address if no one else lives there - Help!!
+//                List<Person> x = person.getAddress().getPersons();
+//                if(x.size() == 1) {
+//                    em.remove(person.getAddress());
+//                }
+                
+                person.getAddress().removePerson(person);
+                if(person.getAddress().getPersons().isEmpty()){
+                    em.remove(person.getAddress());
+                }
 
+                em.remove(person);
                 em.getTransaction().commit();
             } finally {
                 em.close();

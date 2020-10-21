@@ -21,10 +21,12 @@ import utils.EMF_Creator;
 public class Tester {
 
     public static void main(String[] args) throws PersonNotFoundException {
+
 //        EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
 //        EntityManager em = emf.createEntityManager();
 //
 //
+
 //        Person p1 = new Person("email1", "fornavn", "efternavn");
 //        Person p2 = new Person("email2", "navn", "navn2");
 //        Person p3 = new Person("email3", "navnet", "navnet2");
@@ -52,6 +54,7 @@ public class Tester {
 //        p1.addHobby(h1);
 //        p1.addHobby(h2);
 //        p3.addHobby(h1);
+
 //
 //
 //
@@ -106,6 +109,7 @@ public class Tester {
 //        } finally {
 //            em.close();
 //        }
+
 
 
         // facade.deletePerson(dto1.getId());
