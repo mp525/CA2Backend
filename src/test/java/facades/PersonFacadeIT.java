@@ -152,6 +152,8 @@ public class PersonFacadeIT {
         assertNotNull(lissy);
     }
 
+    
+    @Test
     public void testCountWithGivenHobby() {
         int res = facade.countWithGivenHobby("name");
         int res2 = facade.countWithGivenHobby("dnd");
@@ -160,7 +162,7 @@ public class PersonFacadeIT {
     }
 
     @Test
-    public void testDeletePerson() {
+    public void testDeletePerson() throws PersonNotFoundException {
         List<PersonDTO> listBefore = facade.getAllPersons();
         int listBefNum = listBefore.size();
 
