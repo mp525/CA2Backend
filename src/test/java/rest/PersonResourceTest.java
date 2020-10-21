@@ -15,13 +15,22 @@ import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
 import io.restassured.parsing.Parser;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.hamcrest.Matchers;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,9 +43,10 @@ import utils.EMF_Creator;
  * @author Mathias
  */
 public class PersonResourceTest {
-   private static final int SERVER_PORT = 7777;
+
+    private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api/";
-    
+
     private static Person p1, p2, p3;
 
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
@@ -59,8 +69,7 @@ public class PersonResourceTest {
         RestAssured.baseURI = SERVER_URL;
         RestAssured.port = SERVER_PORT;
         RestAssured.defaultParser = Parser.JSON;
-        
-        
+
     }
 
     @AfterAll
@@ -116,7 +125,6 @@ public class PersonResourceTest {
             em.close();
         }
     }
-    
 
     @Test
     public void testAddPerson() {
@@ -131,5 +139,18 @@ public class PersonResourceTest {
                 .body("id", notNullValue());
     }
 
-    
+    @Test
+    public void testGetAllByZip() {
+        given()
+                .pathParam("zip", "2750")
+                .get("person/allWithZip/{zip}")
+                .then()
+                .assertThat()
+                .body("zip[0]", equalTo("2750"))
+                .assertThat()
+                .body("zip[1]", equalTo("2750"))
+                .assertThat()
+                .body("zip[2]", equalTo("2750"));
+    }
+
 }
