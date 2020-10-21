@@ -67,7 +67,7 @@ public class PersonFacade {
         for (Phone ph : p.getPhones()) {
             list3.add(new PhoneDTO(ph));
         }
-        return new PersonDTO(p.getFirstName(), p.getLastName(), p.getEmail(), p.getAddress().getStreet(), p.getAddress().getHouseNr(), p.getAddress().getCityInfo().getZipCode(), list2,list3);
+        return new PersonDTO(p.getFirstName(), p.getLastName(), p.getEmail(), p.getAddress().getStreet(), p.getAddress().getHouseNr(), p.getAddress().getCityInfo().getZipCode(), list2, list3);
 
     }
 
@@ -96,6 +96,7 @@ public class PersonFacade {
     }
 
     public PersonDTO editPerson(PersonDTO p) throws PersonNotFoundException {
+        System.out.println("xxxxxxxxxxxxxxxxxxx");
         EntityManager em = emf.createEntityManager();
 //              TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.id =:" + p.getId() + "", Person.class);
         Person pFind = em.find(Person.class, p.getId());
@@ -113,13 +114,35 @@ public class PersonFacade {
                 if (pFind.getAddress().getPersons().isEmpty()) {
                     em.remove(pFind.getAddress());
                 }
+
+                a1.setStreet(p.getStreet());
+                a1.setHouseNr(p.getHouseNr());
+                CityInfo ci1 = em.find(CityInfo.class, p.getZip());
+                
+//                ci1.setCity(p.);
+                a1.setCityInfo(ci1);
+                a1.getCityInfo().getZipCode();
+//                p.getAddress().getCityInfo().getZipCode()
+                
                 a1.addPerson(pFind);
                 pFind.setAddress(a1);
-                TypedQuery<Hobby> query2 = em.createQuery("Select h from Hobby h where h.name = :name", Hobby.class);
-                query2.setParameter("name", p.getHobbyName());
-                Hobby hobby = query2.getSingleResult();
-                List<Hobby> hop = pFind.getHobbies();
-                hop.add(hobby);
+
+                
+                //Hobby data
+                
+                List<HobbyDTO> hobbyDTOList = p.getHobbies();
+                List<Hobby> hobbyList = new ArrayList<Hobby>();
+                for (HobbyDTO hobbyDTO : hobbyDTOList) {
+
+                    Hobby hobbyFound = em.find(Hobby.class, hobbyDTO.getName());
+
+                    if (hobbyFound == null) {
+                        em.persist(hobbyFound);
+                    }
+                    hobbyList.add(hobbyFound);
+                }
+
+                pFind.setHobbies(hobbyList);
                 em.getTransaction().commit();
             } finally {
                 em.close();

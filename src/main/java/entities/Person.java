@@ -58,6 +58,10 @@ public class Person implements Serializable {
             }
             
             
+    }
+    public void setHobbies(List<Hobby> hobbyList){
+            this.hobbies = hobbyList;
+            
         }
         public void removeHobby(Hobby hobby){
             if(hobby != null){

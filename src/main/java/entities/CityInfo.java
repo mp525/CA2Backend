@@ -50,6 +50,14 @@ public class CityInfo implements Serializable {
             address.setCityInfo(this);
         }
     }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
      
      
 
