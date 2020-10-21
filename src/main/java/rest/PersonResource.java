@@ -63,10 +63,10 @@ public class PersonResource {
 
     public String getJson(@PathParam("hobbyID")String hobbyID) {
         
-//        List<PersonDTO> p =FACADE.getAllByHobby(hobbyID);
-//        return new Gson().toJson(p);
+        List<PersonDTO> p =FACADE.getAllByHobby(hobbyID);
+       return new Gson().toJson(p);
 
-        return null;
+       
 
     
     }
@@ -83,15 +83,14 @@ public class PersonResource {
         return GSON.toJson(edited);
 
     }
-    @Path("id/{id}")
+    @Path("id/{phone}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getPersonByPhone(@PathParam("id")int id) {
-//       PersonDTO p = FACADE.getByPhone(id);
-//        
-//        return new Gson().toJson(p);
+    public String getPersonByPhone(@PathParam("phone")int phone) {
+      PersonDTO p = FACADE.getByPhone(phone);
+       
+        return new Gson().toJson(p);
 
-        return null;
 
     }
     
