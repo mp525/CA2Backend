@@ -57,7 +57,7 @@ public class PersonDTO {
 
     }
 
-    public PersonDTO(String firstName, String lastName, String email, String street, String houseNr, String zip, String hobbyName) {
+    public PersonDTO(String firstName, String lastName, String email, String street, String houseNr, String zip, String hobbyName, int phoneNr, String phoneDisc) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -65,6 +65,8 @@ public class PersonDTO {
         this.houseNr = houseNr;
         this.zip = zip;
         this.hobbyName = hobbyName;
+        this.phoneNr = phoneNr;
+        this.phoneDisc = phoneDisc;
     }
 
     public PersonDTO(String firstName, String lastName, String email, String street, String houseNr, String zip, List<HobbyDTO> list, List<PhoneDTO>list2) {

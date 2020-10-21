@@ -111,7 +111,6 @@ public class PersonFacadeIT {
             em.persist(h1);
             em.persist(h2);
 
-             p1.setId(19);
             
             em.persist(p1);
             em.persist(p2);
@@ -227,9 +226,10 @@ public class PersonFacadeIT {
 //        PersonDTO result = facade.addPerson(p);
 //        assertEquals(p.getFirstName(), result.getFirstName());
 //    }
-
+    
+    @Test
     public void testAddPerson(){
-        PersonDTO p = new PersonDTO("fName", "lName", "mailbro", "streets", "numberhouse", "2750", "dnd"); 
+        PersonDTO p = new PersonDTO("fName", "lName", "mailbro", "streets", "numberhouse", "2750", "dnd", 21202120, "home"); 
         PersonDTO result = facade.addPerson(p);
         assertEquals(p.getFirstName(), result.getFirstName());
     }
