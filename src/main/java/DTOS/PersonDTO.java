@@ -16,7 +16,8 @@ import java.util.List;
  * @author matti
  */
 public class PersonDTO {
-     private int id;
+
+    private int id;
     private String email;
     private String firstName;
     private String lastName;
@@ -29,6 +30,7 @@ public class PersonDTO {
     private String hobbyName;
     private List<HobbyDTO> hobbies;
 
+
     public PersonDTO() {
     }
 
@@ -39,6 +41,9 @@ public class PersonDTO {
         this.email = p.getEmail();
         this.street = p.getAddress().getStreet();
         this.houseNr = p.getAddress().getHouseNr();
+
+
+
         this.zip = p.getAddress().getCityInfo().getZipCode();  
         this.hobbies = new ArrayList();
         for (Hobby hobby : p.getHobbies()) {
@@ -49,6 +54,7 @@ public class PersonDTO {
             this.phones.add(new PhoneDTO(phone));
         }
         
+
     }
 
     public PersonDTO(String firstName, String lastName, String email, String street, String houseNr, String zip, String hobbyName) {
@@ -60,7 +66,11 @@ public class PersonDTO {
         this.zip = zip;
         this.hobbyName = hobbyName;
     }
+
+
+  
     public PersonDTO(String firstName, String lastName, String email, String street, String houseNr, String zip, List<HobbyDTO> list) {
+
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -69,6 +79,7 @@ public class PersonDTO {
         this.zip = zip;
         this.hobbies = list;
     }
+
 
     public List<PhoneDTO> getPhones() {
         return phones;
@@ -101,9 +112,10 @@ public class PersonDTO {
     public List<PersonDTO>toDTO(List<Person>persons){
         List<PersonDTO>dtoes = new ArrayList();
         for(Person p: persons){
+
             dtoes.add(new PersonDTO(p));
         }
-         return dtoes;        
+        return dtoes;
     }
 
     public List<HobbyDTO> getHobbies() {
@@ -113,7 +125,7 @@ public class PersonDTO {
     public void setHobbies(List<HobbyDTO> hobbies) {
         this.hobbies = hobbies;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -153,9 +165,6 @@ public class PersonDTO {
     public void setHobbyName(String hobbyName) {
         this.hobbyName = hobbyName;
     }
-    
-    
-    
 
     public String getEmail() {
         return email;
@@ -180,5 +189,10 @@ public class PersonDTO {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+
+    @Override
+    public String toString() {
+        return "PersonDTO{" + "id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName + ", street=" + street + ", houseNr=" + houseNr + ", zip=" + zip + ", hobbyName=" + hobbyName + ", hobbies=" + hobbies + '}';
+    }
+
 }
