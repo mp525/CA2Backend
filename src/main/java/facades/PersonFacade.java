@@ -5,6 +5,7 @@
  */
 package facades;
 
+import DTOS.HobbyDTO;
 import DTOS.PersonDTO;
 import entities.Address;
 import entities.CityInfo;
@@ -57,8 +58,13 @@ public class PersonFacade {
         
         System.out.println(p);
         System.out.println(p.getAddress().getStreet() + p.getAddress().getHouseNr());
+        
+        List<HobbyDTO> list2 = new ArrayList();
+        for (Hobby h : p.getHobbies()) {
+            list2.add(new HobbyDTO(h));
+        }
 
-        return new PersonDTO(p.getFirstName(), p.getLastName(), p.getEmail(), p.getAddress().getStreet(), p.getAddress().getHouseNr(), p.getAddress().getCityInfo().getZipCode(), p.getHobbies());
+        return new PersonDTO(p.getFirstName(), p.getLastName(), p.getEmail(), p.getAddress().getStreet(), p.getAddress().getHouseNr(), p.getAddress().getCityInfo().getZipCode(), list2);
 
     }
 

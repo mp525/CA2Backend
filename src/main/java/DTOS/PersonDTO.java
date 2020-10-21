@@ -22,21 +22,25 @@ public class PersonDTO {
     private String street;
     private String houseNr;
     private String zip;
+    //private String phone;
     private String hobbyName;
-    private List<Hobby>hobbies;
+    private List<HobbyDTO> hobbies;
 
     public PersonDTO() {
     }
 
     public PersonDTO(Person p) {
+        this.id = p.getId();
         this.firstName = p.getFirstName();
         this.lastName = p.getLastName();
         this.email = p.getEmail();
         this.street = p.getAddress().getStreet();
         this.houseNr = p.getAddress().getHouseNr();
         this.zip = p.getAddress().getCityInfo().getZipCode();  
-        this.hobbies = p.getHobbies();
-        
+        this.hobbies = new ArrayList();
+        for (Hobby hobby : p.getHobbies()) {
+            this.hobbies.add(new HobbyDTO(hobby));
+        }
         
     }
 
@@ -49,7 +53,7 @@ public class PersonDTO {
         this.zip = zip;
         this.hobbyName = hobbyName;
     }
-    public PersonDTO(String firstName, String lastName, String email, String street, String houseNr, String zip, List<Hobby> list) {
+    public PersonDTO(String firstName, String lastName, String email, String street, String houseNr, String zip, List<HobbyDTO> list) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -68,11 +72,11 @@ public class PersonDTO {
          return dtoes;        
     }
 
-    public List<Hobby> getHobbies() {
+    public List<HobbyDTO> getHobbies() {
         return hobbies;
     }
 
-    public void setHobbies(List<Hobby> hobbies) {
+    public void setHobbies(List<HobbyDTO> hobbies) {
         this.hobbies = hobbies;
     }
     
