@@ -85,7 +85,7 @@ public class Tester {
         //Person p1 = new Person("email1", "fornavn", "efternavn");
 
 //String email, String firstName, String lastName, String street, String houseNr, int zip, String hobbyName
-        PersonDTO dto1 = new PersonDTO("mail2", "firstName2", "lastName2", "Street2", "houseNr2", "1011", "Animation");
+       // PersonDTO dto1 = new PersonDTO("mail2", "firstName2", "lastName2", "Street2", "houseNr2", "1011", "Animation");
         PersonDTO dtol2 = new PersonDTO(p1);
         PersonFacade facade = PersonFacade.getGMPFacade(emf);
         facade.addPerson(dto1);
