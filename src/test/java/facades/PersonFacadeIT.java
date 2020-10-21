@@ -226,7 +226,7 @@ public class PersonFacadeIT {
 //        PersonDTO result = facade.addPerson(p);
 //        assertEquals(p.getFirstName(), result.getFirstName());
 //    }
-
+    
     public void testAddPerson(){
         PersonDTO p = new PersonDTO("fName", "lName", "mailbro", "streets", "numberhouse", "2750", "dnd"); 
         PersonDTO result = facade.addPerson(p);
