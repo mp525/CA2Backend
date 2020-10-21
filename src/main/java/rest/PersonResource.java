@@ -10,6 +10,7 @@ import DTOS.PersonDTO;
 import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
 import facades.PersonFacade;
+import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.Context;
@@ -111,6 +112,17 @@ public class PersonResource {
         String json = GSON.toJson(dto);
         return json;
     }
+    
+    @Path("allWithZip/{zip}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String allWithZip(@PathParam("zip") String zip){
+        List<PersonDTO> list = FACADE.getAllByZip(zip);
+        String json = GSON.toJson(list);
+        return json;
+    }
+    
+    
 
     
 }
