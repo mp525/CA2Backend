@@ -16,6 +16,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.NotFoundException;
 
 /**
  *
@@ -40,7 +41,7 @@ public class PersonFacade {
     }
 
     //Matti
-    public PersonDTO getByPhone(int phonenr) {
+    public PersonDTO getByPhone(int phonenr) throws NotFoundException{
         EntityManager enf = emf.createEntityManager();
         Person p;
         try {
@@ -62,7 +63,7 @@ public class PersonFacade {
 
     }
 
-    public List<PersonDTO> getAllByHobby(String hobby) {
+    public List<PersonDTO> getAllByHobby(String hobby)throws NotFoundException {
         EntityManager enf = emf.createEntityManager();
         List<PersonDTO> listDTO;
         try {
