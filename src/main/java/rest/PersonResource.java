@@ -89,7 +89,7 @@ public class PersonResource {
 //        return GSON.toJson(edited);
 //
 //    }
-    @Path("id/{phone}")
+    @Path("phone/{phone}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getPersonByPhone(@PathParam("phone")int phone) throws PersonNotFoundException {

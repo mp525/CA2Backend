@@ -229,7 +229,7 @@ public class PersonResourceTest {
     @Test
     public void testFindByPhone() {
          given()
-         .get("person/id/1")
+         .get("person/phone/1")
          .then()
          .assertThat()
          .body("firstName", equalTo("fornavn"));      
