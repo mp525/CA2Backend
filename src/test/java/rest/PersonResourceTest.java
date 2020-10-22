@@ -191,5 +191,44 @@ public class PersonResourceTest {
         assertEquals(p.getLastName(),p1DTO.getLastName());
         assertEquals(p.getFirstName(),p1DTO.getFirstName());
     }
+    
+    @Test
+    public void testDeletePerson() {
+//        PersonDTO x = given()
+//                .pathParam("id", p1.getId())
+//                .delete("/person/{id}")
+//                .then()
+//                .extract().body().jsonPath();
+//        String x = given()
+//                .contentType("application/json")
+//                .body(new PersonDTO(p1))
+//                .when()
+//                .pathParam("id", p1.getId())
+//                .delete("/person/{id}")
+//                .then()
+//                .extract().body().jsonPath().getString(p1.toString());
+//        assertEquals(x, p1.toString());
+        
+        String y;
+        y = given()
+                .contentType("application/json")
+                .pathParam("id", p1.getId())
+                .delete("person/{id}")
+                .then()
+                .extract().body().jsonPath().getString("firstName"); //getString tager kolonne/feltnavn! Hvis flere har samme navn, bliver det et array
+        System.out.println(y);
+        assertEquals(p1.getFirstName(), y);
+        /*
+                given()
+                .contentType("application/json")//String firstName, String lastName, String email, String street, String houseNr, String zip, String hobbyName, int phoneNr, String phoneDisc
+                .body(new PersonDTO("LaterPostBoy", "Jensen", "postemail", "nyby 22", "21a", "2750", "dnd", 21213030, "homephone"))
+                .when()
+                .post("person")
+                .then()
+                .body("firstName", equalTo("LaterPostBoy"))
+                .body("lastName", equalTo("Jensen"))
+                .body("id", notNullValue());
+                */
+    }
 
 }
