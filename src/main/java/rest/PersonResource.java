@@ -9,6 +9,7 @@ import DTOS.PersonDTO;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
+import exceptions.HobbyNotFoundException;
 import exceptions.PersonNotFoundException;
 import facades.PersonFacade;
 import java.util.List;
@@ -126,7 +127,7 @@ public class PersonResource {
     @Path("countByHobby/{hobbyName}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String countWithGivenHobby(@PathParam("hobbyName") String hobbyName) {
+    public String countWithGivenHobby(@PathParam("hobbyName") String hobbyName) throws HobbyNotFoundException {
         int count = FACADE.countWithGivenHobby(hobbyName);
         //return GSON.toJson(count);
         return "{\"count\":" + count + "}";
