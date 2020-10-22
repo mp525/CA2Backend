@@ -63,6 +63,11 @@ public class HobbyDTO {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "HobbyDTO{" + "name=" + name + ", wikiLink=" + wikiLink + ", category=" + category + ", type=" + type + '}';
+    }
     
     
     

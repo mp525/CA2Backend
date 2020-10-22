@@ -37,6 +37,8 @@ public class Hobby implements Serializable {
 
     public Hobby() {
     }
+    
+    
 
     public Hobby(String name, String wikiLink, String category, String type) {
         this.name = name;

@@ -44,7 +44,7 @@ public class PersonFacade {
     }
 
     //Matti
-    public PersonDTO getByPhone(int phonenr) throws NotFoundException{
+    public PersonDTO getByPhone(int phonenr) throws NotFoundException {
         EntityManager enf = emf.createEntityManager();
         Person p;
         try {
@@ -58,7 +58,7 @@ public class PersonFacade {
 
         System.out.println(p);
         System.out.println(p.getAddress().getStreet() + p.getAddress().getHouseNr());
-        
+
         List<HobbyDTO> list2 = new ArrayList();
         for (Hobby h : p.getHobbies()) {
             list2.add(new HobbyDTO(h));
@@ -67,11 +67,11 @@ public class PersonFacade {
         for (Phone ph : p.getPhones()) {
             list3.add(new PhoneDTO(ph));
         }
-        return new PersonDTO(p.getFirstName(), p.getLastName(), p.getEmail(), p.getAddress().getStreet(), p.getAddress().getHouseNr(), p.getAddress().getCityInfo().getZipCode(), list2,list3);
+        return new PersonDTO(p.getFirstName(), p.getLastName(), p.getEmail(), p.getAddress().getStreet(), p.getAddress().getHouseNr(), p.getAddress().getCityInfo().getZipCode(), list2, list3);
 
     }
 
-    public List<PersonDTO> getAllByHobby(String hobby)throws NotFoundException {
+    public List<PersonDTO> getAllByHobby(String hobby) throws NotFoundException {
         EntityManager enf = emf.createEntityManager();
         List<PersonDTO> listDTO;
         try {
@@ -96,6 +96,7 @@ public class PersonFacade {
     }
 
     public PersonDTO editPerson(PersonDTO p) throws PersonNotFoundException {
+        System.out.println("xxxxxxxxxxxxxxxxxxx");
         EntityManager em = emf.createEntityManager();
 //              TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.id =:" + p.getId() + "", Person.class);
         Person pFind = em.find(Person.class, p.getId());
@@ -108,6 +109,40 @@ public class PersonFacade {
                 pFind.setFirstName(p.getFirstName());
                 pFind.setLastName(p.getLastName());
                 pFind.setEmail(p.getEmail());
+                Address a1 = new Address(p.getStreet(), p.getHouseNr());
+                pFind.getAddress().removePerson(pFind);
+                if (pFind.getAddress().getPersons().isEmpty()) {
+                    em.remove(pFind.getAddress());
+                }
+
+                a1.setStreet(p.getStreet());
+                a1.setHouseNr(p.getHouseNr());
+                CityInfo ci1 = em.find(CityInfo.class, p.getZip());
+                
+//                ci1.setCity(p.);
+                a1.setCityInfo(ci1);
+                a1.getCityInfo().getZipCode();
+//                p.getAddress().getCityInfo().getZipCode()
+                
+                a1.addPerson(pFind);
+                pFind.setAddress(a1);
+
+                
+                //Hobby data
+                
+                List<HobbyDTO> hobbyDTOList = p.getHobbies();
+                List<Hobby> hobbyList = new ArrayList<Hobby>();
+                for (HobbyDTO hobbyDTO : hobbyDTOList) {
+
+                    Hobby hobbyFound = em.find(Hobby.class, hobbyDTO.getName());
+
+                    if (hobbyFound == null) {
+                        em.persist(hobbyFound);
+                    }
+                    hobbyList.add(hobbyFound);
+                }
+
+                pFind.setHobbies(hobbyList);
                 em.getTransaction().commit();
             } finally {
                 em.close();
@@ -160,11 +195,10 @@ public class PersonFacade {
             Hobby hobby = query2.getSingleResult();
             System.out.println("hej");
             person.addHobby(hobby);
-            
 
             Phone phone = new Phone(p.getPhoneNr(), p.getPhoneDisc());
             person.addPhone(phone);
-            
+
 //            TypedQuery<Phone> query3 = em.createQuery("Select p from Phone p where p.person.id = :id", Phone.class);
 //            query3.setParameter("id", person.getId());
 //            List<Phone> phones = query3.getResultList();
@@ -172,14 +206,12 @@ public class PersonFacade {
 //            for (PhoneDTO pdto : p.getPhones()) {
 //                person.addPhone(new Phone(pdto.getNumber(), pdto.getDescription()));
 //            }
-
             em.getTransaction().begin();
             em.persist(person);
-            
+
 //            TypedQuery<Phone> query3 = em.createQuery("Select p from Phone p where p.person.id = :id", Phone.class);
 //            query3.setParameter("id", person.getId());
 //            List<Phone> phones = query3.getResultList();
-            
             em.getTransaction().commit();
             p2 = new PersonDTO(person);
 

@@ -72,18 +72,18 @@ public class PersonResource {
     
     }
 
-    @PUT
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public String updatePerson(@PathParam("id") int id, String p) throws NullPointerException, PersonNotFoundException {
-        PersonDTO person = GSON.fromJson(p, PersonDTO.class);
-        
-        person.setId(id);
-        PersonDTO edited = FACADE.editPerson(person);
-        return GSON.toJson(edited);
-
-    }
+//    @PUT
+//    @Path("/{id}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public String updatePerson(@PathParam("id") int id, String p) throws NullPointerException, PersonNotFoundException {
+//        PersonDTO person = GSON.fromJson(p, PersonDTO.class);
+//        
+//        person.setId(id);
+//        PersonDTO edited = FACADE.editPerson(person);
+//        return GSON.toJson(edited);
+//
+//    }
     @Path("id/{phone}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)

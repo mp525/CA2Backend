@@ -70,7 +70,6 @@ public class PersonFacadeIT {
         p1 = new Person("fornavn", "efternavn", "email1");
         p2 = new Person("navn", "navn2", "email2");
         p3 = new Person("navnet", "navnet2", "email3");
-        
 
         Phone ph1 = new Phone(1, "Home");
         Phone ph2 = new Phone(11111112, "Home");
@@ -105,13 +104,9 @@ public class PersonFacadeIT {
             em.createQuery("DELETE from Address").executeUpdate();
             em.createQuery("DELETE from CityInfo").executeUpdate();
 
-
-
-            
             em.persist(h1);
             em.persist(h2);
 
-            
             em.persist(p1);
             em.persist(p2);
             em.persist(p3);
@@ -127,30 +122,25 @@ public class PersonFacadeIT {
     }
 
     @Test
-    public void testGetByPhone(){
-        
-        PersonDTO exp=facade.getByPhone(1);
-        String result="fornavn";
-        assertEquals(result,exp.getFirstName());
-        
+    public void testGetByPhone() {
+
+        PersonDTO exp = facade.getByPhone(1);
+        String result = "fornavn";
+        assertEquals(result, exp.getFirstName());
 
     }
 
     @Test
-    public void testgetAllByHobby(){
+    public void testgetAllByHobby() {
 
-        
-       List<PersonDTO> exp=facade.getAllByHobby("dnd");
-        String result="fornavn";
-         
-       assertThat(exp, everyItem(hasProperty("email")));
-        assertThat(exp, hasItems( 
+        List<PersonDTO> exp = facade.getAllByHobby("dnd");
+        String result = "fornavn";
+
+        assertThat(exp, everyItem(hasProperty("email")));
+        assertThat(exp, hasItems(
                 Matchers.<PersonDTO>hasProperty("email", is("email1"))
-               
         )
-      );
-
-        
+        );
 
     }
 
@@ -161,15 +151,16 @@ public class PersonFacadeIT {
 
         assertNotNull(lissy);
     }
+
     
     @Test
     public void testCountWithGivenHobby() {
         int res = facade.countWithGivenHobby("name");
         int res2 = facade.countWithGivenHobby("dnd");
-        assertEquals(2,res);
-        assertEquals(1,res2);
+        assertEquals(2, res);
+        assertEquals(1, res2);
     }
-    
+
     @Test
     public void testDeletePerson() throws PersonNotFoundException {
         List<PersonDTO> listBefore = facade.getAllPersons();
@@ -183,7 +174,7 @@ public class PersonFacadeIT {
         assertEquals(3, listBefNum);
         assertEquals(2, listAftNum);
     }
-    
+
     @Test
     public void testGetAllPersons() {
         List<PersonDTO> persons = facade.getAllPersons();
@@ -203,22 +194,27 @@ public class PersonFacadeIT {
 //        Hobby h1 = new Hobby("Dnd", "dnd.com", "Nørdstas", type)
 //        a1.setCityInfo(ci1);
 //        a1.addPerson(pEt);
-        
+
         p1.setFirstName("Niels");
+//        System.out.println("Her er Hobby data: " + p1.getHobbies());
         PersonDTO pd1 = new PersonDTO(p1);
+//        System.out.println("Her er Hobby data: " + pd1.getHobbies());
 
         p1.setFirstName("Mandibles");
         PersonDTO pd2 = new PersonDTO(p1);
-        System.out.println("Here is the DTO" + pd1.toString());
+//        System.out.println("Here is the DTO" + pd1.toString());
+
+        System.out.println("Her er DTO data: " + pd1);
+
+//        System.out.println("Her er Hobby data: " + pd1.getHobbies().toString());
 
         pd1 = facade.editPerson(pd1);
+
 
         assertThat(pd1.getFirstName(), is(not(pd2.getFirstName())));
         assertEquals(pd1.getEmail(), pd2.getEmail());
         assertEquals(pd1.getLastName(), pd2.getLastName());
     }
-
-
 
 //    @Test
 //    public void testAddPerson(){
@@ -226,16 +222,15 @@ public class PersonFacadeIT {
 //        PersonDTO result = facade.addPerson(p);
 //        assertEquals(p.getFirstName(), result.getFirstName());
 //    }
-    
     @Test
-    public void testAddPerson(){
-        PersonDTO p = new PersonDTO("fName", "lName", "mailbro", "streets", "numberhouse", "2750", "dnd", 21202120, "home"); 
+    public void testAddPerson() {
+        PersonDTO p = new PersonDTO("fName", "lName", "mailbro", "streets", "numberhouse", "2750", "dnd", 21202120, "home");
         PersonDTO result = facade.addPerson(p);
         assertEquals(p.getFirstName(), result.getFirstName());
     }
-    
+
     @Test
-    public void testGetAllByZip(){
+    public void testGetAllByZip() {
         List<PersonDTO> resultList = facade.getAllByZip("2750");
         System.out.println("All by zip: " + resultList);
         assertThat(resultList, everyItem(hasProperty("zip")));
