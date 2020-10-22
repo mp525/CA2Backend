@@ -63,7 +63,7 @@ public class PersonResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
 
-    public String getJson(@PathParam("hobbyID")String hobbyID) {
+    public String getJson(@PathParam("hobbyID")String hobbyID) throws PersonNotFoundException {
         
         List<PersonDTO> p =FACADE.getAllByHobby(hobbyID);
        return new Gson().toJson(p);
@@ -85,10 +85,10 @@ public class PersonResource {
 //        return GSON.toJson(edited);
 //
 //    }
-    @Path("id/{phone}")
+    @Path("phone/{phone}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getPersonByPhone(@PathParam("phone")int phone) {
+    public String getPersonByPhone(@PathParam("phone")int phone) throws PersonNotFoundException {
       PersonDTO p = FACADE.getByPhone(phone);
        
         return new Gson().toJson(p);
