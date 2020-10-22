@@ -183,13 +183,11 @@ public class PersonFacade {
 
     public PersonDTO addPerson(PersonDTO p) throws MissingInputException {
         EntityManager em = emf.createEntityManager();
-        if (p.getFirstName().length() == 0 || p.getLastName().length() == 0) {
+        if (nameInvalid(p)) {
             throw new MissingInputException("First Name and/or Last Name is missing!");
-        }
-        if(p.getZip().length() < 3 || p.getZip().length() > 4){
+        } if(zipInvalid(p)){
             throw new MissingInputException("Zipcode was not of appropriate length of 3 or 4 digits!");
-        }
-        if (p.getPhoneNr() == 0) {
+        } if (phoneNrInvalid(p)) {
             throw new MissingInputException("Phonenumber is missing!");
         }
         Person person = new Person(p.getFirstName(), p.getLastName(), p.getEmail());
@@ -222,6 +220,18 @@ public class PersonFacade {
         }
         return p2;
 
+    }
+
+    private static boolean phoneNrInvalid(PersonDTO p) {
+        return p.getPhoneNr() <= 0;
+    }
+
+    private static boolean zipInvalid(PersonDTO p) {
+        return p.getZip().length() < 3 || p.getZip().length() > 4;
+    }
+
+    private static boolean nameInvalid(PersonDTO p) {
+        return p.getFirstName().length() == 0 || p.getLastName().length() == 0;
     }
 
     public static void main(String[] args) {

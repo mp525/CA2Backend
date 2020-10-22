@@ -224,6 +224,26 @@ public class PersonFacadeIT {
         PersonDTO result = facade.addPerson(p);
         assertEquals(p.getFirstName(), result.getFirstName());
     }
+    
+    @Test
+    public void testAddPersonNegativeName(){
+        Exception exception = assertThrows(MissingInputException.class, () ->
+            facade.addPerson(new PersonDTO("","","","","","","",0,"")));
+        assertEquals("First Name and/or Last Name is missing!", exception.getMessage());
+    }
+    @Test
+    public void testAddPersonNegativeZip(){
+        Exception exception = assertThrows(MissingInputException.class, () ->
+            facade.addPerson(new PersonDTO("fName","lName","","","","12","",0,"")));
+        assertEquals("Zipcode was not of appropriate length of 3 or 4 digits!", exception.getMessage());
+    }
+    @Test
+    public void testAddPersonNegativePhone(){
+        Exception exception = assertThrows(MissingInputException.class, () ->
+            facade.addPerson(new PersonDTO("fName","lName","","","","1232","",0,"")));
+        assertEquals("Phonenumber is missing!", exception.getMessage());
+    }
+    
 
     @Test
     public void testGetAllByZip() throws MissingInputException {
@@ -237,5 +257,7 @@ public class PersonFacadeIT {
         )
         );
     }
+    
+    
 
 }
