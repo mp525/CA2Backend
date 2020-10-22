@@ -13,6 +13,7 @@ import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
+import exceptions.HobbyNotFoundException;
 import exceptions.PersonNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -240,22 +241,16 @@ public class PersonFacade {
 
     }
 
-    public int countWithGivenHobby(String hobbyName) {
+    public int countWithGivenHobby(String hobbyName) throws HobbyNotFoundException {
         EntityManager em = emf.createEntityManager();
-        
+
         Hobby hobby = em.find(Hobby.class, hobbyName);
+        if (hobby == null) {
+            throw new HobbyNotFoundException(String.format("Could not find hobby by the name: %s in database", hobbyName));
+        }
         List<Person> list = hobby.getPersons();
         int count = list.size();
         return count;
-
-//        try {
-//            int personCount = (int) em.createQuery(
-//                    "SELECT COUNT(*) FROM PERSON JOIN HOBBY_PERSON ON HOBBY_PERSON.persons_ID = PERSON.ID WHERE HOBBY_PERSON.hobbies_NAME = '" + hobbyName + "'")
-//                    .getSingleResult();
-//            return personCount;
-//        } finally {
-//            em.close();
-//        }
 
     }
 
