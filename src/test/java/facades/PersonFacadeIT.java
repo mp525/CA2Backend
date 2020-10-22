@@ -12,6 +12,7 @@ import entities.Hobby;
 import entities.Person;
 import entities.Phone;
 import exceptions.MissingInputException;
+import exceptions.HobbyNotFoundException;
 import exceptions.PersonNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -155,7 +156,7 @@ public class PersonFacadeIT {
 
     
     @Test
-    public void testCountWithGivenHobby() {
+    public void testCountWithGivenHobby() throws HobbyNotFoundException {
         int res = facade.countWithGivenHobby("name");
         int res2 = facade.countWithGivenHobby("dnd");
         assertEquals(2, res);
