@@ -13,6 +13,7 @@ import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
+import exceptions.HobbyNotFoundException;
 import exceptions.MissingInputException;
 import exceptions.PersonNotFoundException;
 import java.util.ArrayList;
@@ -199,14 +200,14 @@ public class PersonFacade {
             Address address = new Address(p.getStreet(), p.getHouseNr());
             address.setCityInfo(cityInfo);
             person.setAddress(address);
-
+            
             TypedQuery<Hobby> query2 = em.createQuery("Select h from Hobby h where h.name = :name", Hobby.class);
             System.out.println(p.getHobbyName());
             query2.setParameter("name", p.getHobbyName());
             Hobby hobby = query2.getSingleResult();
             System.out.println("hej");
             person.addHobby(hobby);
-
+            
             Phone phone = new Phone(p.getPhoneNr(), p.getPhoneDisc());
             person.addPhone(phone);
 
@@ -215,9 +216,10 @@ public class PersonFacade {
             em.getTransaction().commit();
             p2 = new PersonDTO(person);
 
-        } finally {
+        } 
+        finally {
             em.close();
-        }
+        } 
         return p2;
 
     }
