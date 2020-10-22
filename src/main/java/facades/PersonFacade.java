@@ -100,6 +100,7 @@ public class PersonFacade {
         EntityManager em = emf.createEntityManager();
 //              TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.id =:" + p.getId() + "", Person.class);
         Person pFind = em.find(Person.class, p.getId());
+
         if (pFind == null) {
             throw new PersonNotFoundException(String.format("Person not found, so they coulden't be edited", pFind.toString()));
         } else {
@@ -118,31 +119,39 @@ public class PersonFacade {
                 a1.setStreet(p.getStreet());
                 a1.setHouseNr(p.getHouseNr());
                 CityInfo ci1 = em.find(CityInfo.class, p.getZip());
-                
-//                ci1.setCity(p.);
+
                 a1.setCityInfo(ci1);
                 a1.getCityInfo().getZipCode();
 //                p.getAddress().getCityInfo().getZipCode()
-                
+
                 a1.addPerson(pFind);
                 pFind.setAddress(a1);
 
+                Phone ph1 = new Phone(p.getPhoneNr(), p.getPhoneDisc());
+                    
+//                TypedQuery tq = em.createQuery("Select p from Phone p where p.person.id = :id\", Phone.class");
                 
-                //Hobby data
-                
-                List<HobbyDTO> hobbyDTOList = p.getHobbies();
-                List<Hobby> hobbyList = new ArrayList<Hobby>();
-                for (HobbyDTO hobbyDTO : hobbyDTOList) {
-
-                    Hobby hobbyFound = em.find(Hobby.class, hobbyDTO.getName());
-
-                    if (hobbyFound == null) {
-                        em.persist(hobbyFound);
-                    }
-                    hobbyList.add(hobbyFound);
+                pFind.addPhone(ph1);
+                if (pFind.getPhones().contains(ph1.getNumber())) {
+                    pFind.removePhone(ph1);
                 }
 
-                pFind.setHobbies(hobbyList);
+                //Hobby data
+//                List<HobbyDTO> hobbyDTOList = p.getHobbies();
+//                if (hobbyDTOList == null) {
+//                    hobbyDTOList = new ArrayList<HobbyDTO>();
+//                }
+//                List<Hobby> hobbyList = new ArrayList<Hobby>();
+                Hobby hobbyFound = em.find(Hobby.class, p.getHobbyName());
+
+                if (!pFind.getHobbies().contains(hobbyFound)) {
+
+                    pFind.addHobby(hobbyFound);
+                }
+
+//                    hobbyList.add(hobbyFound);
+//                pFind.setHobbies(hobbyList);
+                em.persist(pFind);
                 em.getTransaction().commit();
             } finally {
                 em.close();
@@ -234,7 +243,7 @@ public class PersonFacade {
 
     public int countWithGivenHobby(String hobbyName) {
         EntityManager em = emf.createEntityManager();
-        
+
         Hobby hobby = em.find(Hobby.class, hobbyName);
         List<Person> list = hobby.getPersons();
         int count = list.size();
@@ -248,7 +257,6 @@ public class PersonFacade {
 //        } finally {
 //            em.close();
 //        }
-
     }
 
     public PersonDTO deletePerson(int id) throws PersonNotFoundException {
@@ -264,15 +272,14 @@ public class PersonFacade {
                 for (Phone phone : phones) {
                     em.remove(phone);
                 }
-                
+
                 //Delete address if no one else lives there - Help!!
 //                List<Person> x = person.getAddress().getPersons();
 //                if(x.size() == 1) {
 //                    em.remove(person.getAddress());
 //                }
-                
                 person.getAddress().removePerson(person);
-                if(person.getAddress().getPersons().isEmpty()){
+                if (person.getAddress().getPersons().isEmpty()) {
                     em.remove(person.getAddress());
                 }
 
