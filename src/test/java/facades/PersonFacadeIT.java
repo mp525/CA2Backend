@@ -124,7 +124,7 @@ public class PersonFacadeIT {
     }
 
     @Test
-    public void testGetByPhone() {
+    public void testGetByPhone() throws PersonNotFoundException {
 
         PersonDTO exp = facade.getByPhone(1);
         String result = "fornavn";
@@ -133,7 +133,7 @@ public class PersonFacadeIT {
     }
 
     @Test
-    public void testgetAllByHobby() {
+    public void testgetAllByHobby() throws PersonNotFoundException {
 
         List<PersonDTO> exp = facade.getAllByHobby("dnd");
         String result = "fornavn";
