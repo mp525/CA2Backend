@@ -14,6 +14,7 @@ import entities.Hobby;
 import entities.Person;
 import entities.Phone;
 import exceptions.HobbyNotFoundException;
+import exceptions.MissingInputException;
 import exceptions.PersonNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,18 +128,16 @@ public class PersonFacade {
                 a1.setStreet(p.getStreet());
                 a1.setHouseNr(p.getHouseNr());
                 CityInfo ci1 = em.find(CityInfo.class, p.getZip());
-                
+
 //                ci1.setCity(p.);
                 a1.setCityInfo(ci1);
                 a1.getCityInfo().getZipCode();
 //                p.getAddress().getCityInfo().getZipCode()
-                
+
                 a1.addPerson(pFind);
                 pFind.setAddress(a1);
 
-                
                 //Hobby data
-                
                 List<HobbyDTO> hobbyDTOList = p.getHobbies();
                 List<Hobby> hobbyList = new ArrayList<Hobby>();
                 for (HobbyDTO hobbyDTO : hobbyDTOList) {
@@ -168,8 +167,11 @@ public class PersonFacade {
         return zips;
     }
 
-    public List<PersonDTO> getAllByZip(String zip) {
+    public List<PersonDTO> getAllByZip(String zip) throws MissingInputException, PersonNotFoundException {
         EntityManager em = emf.createEntityManager();
+        if (zip.length() < 3 || zip.length() > 4) {
+            throw new MissingInputException("Zipcode was not of appropriate length of 3 or 4 digits!");
+        }
         List<PersonDTO> persons = null;
 
         try {
@@ -177,6 +179,9 @@ public class PersonFacade {
                     + "JOIN p.address a WHERE a.cityInfo.zipCode = :zip", Person.class);
             query.setParameter("zip", zip);
             List<Person> list = query.getResultList();
+            if (list.isEmpty()) {
+                throw new PersonNotFoundException(String.format("Could not find zipcode %s in database", zip));
+            }
             PersonDTO dto = new PersonDTO();
             persons = dto.toDTO(list);
         } finally {
@@ -186,41 +191,40 @@ public class PersonFacade {
         return persons;
     }
 
-    public PersonDTO addPerson(PersonDTO p) {
+    public PersonDTO addPerson(PersonDTO p) throws MissingInputException, HobbyNotFoundException {
         EntityManager em = emf.createEntityManager();
+        if (nameInvalid(p)) {
+            throw new MissingInputException("First Name and/or Last Name is missing!");
+        }
+        if (zipInvalid(p)) {
+            throw new MissingInputException("Zipcode was not of appropriate length of 3 or 4 digits!");
+        }
+        if (phoneNrInvalid(p)) {
+            throw new MissingInputException("Phonenumber is missing!");
+        }
         Person person = new Person(p.getFirstName(), p.getLastName(), p.getEmail());
         PersonDTO p2 = null;
         try {
-            TypedQuery<CityInfo> query1 = em.createQuery("Select c from CityInfo c where c.zipCode = :zipcode", CityInfo.class);
-            query1.setParameter("zipcode", p.getZip());
-            CityInfo cityInfo = query1.getSingleResult();
+            CityInfo cityInfo = em.find(CityInfo.class, p.getZip());
             Address address = new Address(p.getStreet(), p.getHouseNr());
             address.setCityInfo(cityInfo);
             person.setAddress(address);
 
-            TypedQuery<Hobby> query2 = em.createQuery("Select h from Hobby h where h.name = :name", Hobby.class);
-            System.out.println(p.getHobbyName());
-            query2.setParameter("name", p.getHobbyName());
-            Hobby hobby = query2.getSingleResult();
-            System.out.println("hej");
-            person.addHobby(hobby);
-
+            Hobby hobby = em.find(Hobby.class, p.getHobbyName());
+            if (hobby == null) {
+                throw new HobbyNotFoundException(String.format("Could not find hobby by the name: %s in database", p.getHobbyName()));
+            }
             Phone phone = new Phone(p.getPhoneNr(), p.getPhoneDisc());
+            TypedQuery<Phone> query = em.createQuery("select p from Phone p where p.number = :number", Phone.class);
+            query.setParameter("number", p.getPhoneNr());
+            List<Phone> listP = query.getResultList();
+            if (!listP.isEmpty()) {
+                throw new MissingInputException(String.format("Phone number %s already exists in database!", p.getPhoneNr()));
+            }
             person.addPhone(phone);
 
-//            TypedQuery<Phone> query3 = em.createQuery("Select p from Phone p where p.person.id = :id", Phone.class);
-//            query3.setParameter("id", person.getId());
-//            List<Phone> phones = query3.getResultList();
-//            
-//            for (PhoneDTO pdto : p.getPhones()) {
-//                person.addPhone(new Phone(pdto.getNumber(), pdto.getDescription()));
-//            }
             em.getTransaction().begin();
             em.persist(person);
-
-//            TypedQuery<Phone> query3 = em.createQuery("Select p from Phone p where p.person.id = :id", Phone.class);
-//            query3.setParameter("id", person.getId());
-//            List<Phone> phones = query3.getResultList();
             em.getTransaction().commit();
             p2 = new PersonDTO(person);
 
@@ -231,12 +235,26 @@ public class PersonFacade {
 
     }
 
-    public static void main(String[] args) throws PersonNotFoundException {
-        instance.getByPhone(11111112);
 
-        Person p1 = new Person("cool@dude.yeah", "Niels", "Petersen");
-        PersonDTO pD1 = new PersonDTO(p1);
-        Address a1 = new Address("Coolstreet", "342");
+    private static boolean phoneNrInvalid(PersonDTO p) {
+        return p.getPhoneNr() <= 0;
+    }
+
+    private static boolean zipInvalid(PersonDTO p) {
+        return p.getZip().length() < 3 || p.getZip().length() > 4;
+    }
+
+
+    private static boolean nameInvalid(PersonDTO p) {
+        return p.getFirstName().length() == 0 || p.getLastName().length() == 0;
+    }
+
+    public static void main(String[] args) {
+//        instance.getByPhone(11111112);
+//
+//        Person p1 = new Person("cool@dude.yeah", "Niels", "Petersen");
+//        PersonDTO pD1 = new PersonDTO(p1);
+//        Address a1 = new Address("Coolstreet", "342");
 //                pD1.editPerson();
 
     }
@@ -267,15 +285,14 @@ public class PersonFacade {
                 for (Phone phone : phones) {
                     em.remove(phone);
                 }
-                
+
                 //Delete address if no one else lives there - Help!!
 //                List<Person> x = person.getAddress().getPersons();
 //                if(x.size() == 1) {
 //                    em.remove(person.getAddress());
 //                }
-                
                 person.getAddress().removePerson(person);
-                if(person.getAddress().getPersons().isEmpty()){
+                if (person.getAddress().getPersons().isEmpty()) {
                     em.remove(person.getAddress());
                 }
 

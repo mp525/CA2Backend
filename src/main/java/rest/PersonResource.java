@@ -9,7 +9,11 @@ import DTOS.PersonDTO;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
+
+import exceptions.MissingInputException;
+
 import exceptions.HobbyNotFoundException;
+
 import exceptions.PersonNotFoundException;
 import facades.PersonFacade;
 import java.util.List;
@@ -108,7 +112,7 @@ public class PersonResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String addPerson(String person){
+    public String addPerson(String person) throws MissingInputException, HobbyNotFoundException{
         PersonDTO personDTO = GSON.fromJson(person, PersonDTO.class);
         PersonDTO dto = FACADE.addPerson(personDTO);
         String json = GSON.toJson(dto);
@@ -118,7 +122,7 @@ public class PersonResource {
     @Path("allWithZip/{zip}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String allWithZip(@PathParam("zip") String zip){
+    public String allWithZip(@PathParam("zip") String zip) throws MissingInputException, PersonNotFoundException{
         List<PersonDTO> list = FACADE.getAllByZip(zip);
         String json = GSON.toJson(list);
         return json;

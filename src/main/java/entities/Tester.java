@@ -46,10 +46,54 @@ import utils.EMF_Creator;
 public class Tester {
 
     public static void main(String[] args) throws PersonNotFoundException {
-
-
+        
+//
+//
 //        EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
 //        EntityManager em = emf.createEntityManager();
+//        
+//        Person p1 = new Person("fornavn", "efternavn", "email1");
+//        Person p2 = new Person("navn", "navn2", "email2");
+//        Person p3 = new Person("navnet", "navnet2", "email3");
+//
+//        Phone ph1 = new Phone(1, "Home");
+//        Phone ph2 = new Phone(11111112, "Home");
+//        Phone ph3 = new Phone(11111113, "Home");
+//        p1.addPhone(ph1);
+//        p2.addPhone(ph2);
+//        p2.addPhone(ph3);
+//
+//        Hobby h1 = new Hobby("name", "wikilink", "categoy", "type");
+//        Hobby h2 = new Hobby("dnd", "wikilink", "categoy", "type");
+//        CityInfo cf = new CityInfo("2750", "Ballerup");
+//        Address a1 = new Address("Street", "2");
+//        Address a2 = new Address("street2", "3");
+//        Address a3 = new Address("street3", "4");
+//        a1.setCityInfo(cf);
+//        a2.setCityInfo(cf);
+//        a3.setCityInfo(cf);
+//
+//        a1.addPerson(p1);
+//        a1.addPerson(p2);
+//        a2.addPerson(p3);
+//        p1.addHobby(h1);
+//        p1.addHobby(h2);
+//        p3.addHobby(h1);
+//        try {
+//
+//            em.getTransaction().begin();
+// 
+//            em.persist(h1);
+//            em.persist(h2);
+//
+//            em.persist(p1);
+//            em.persist(p2);
+//            em.persist(p3);
+//
+//            em.getTransaction().commit();
+//        } finally {
+//            em.close();
+//        }
 //
 //
 
