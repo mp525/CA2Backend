@@ -11,6 +11,7 @@ import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
+import exceptions.MissingInputException;
 import exceptions.PersonNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -216,21 +217,16 @@ public class PersonFacadeIT {
         assertEquals(pd1.getLastName(), pd2.getLastName());
     }
 
-//    @Test
-//    public void testAddPerson(){
-//        PersonDTO p = new PersonDTO(p1);
-//        PersonDTO result = facade.addPerson(p);
-//        assertEquals(p.getFirstName(), result.getFirstName());
-//    }
+
     @Test
-    public void testAddPerson() {
+    public void testAddPerson() throws MissingInputException {
         PersonDTO p = new PersonDTO("fName", "lName", "mailbro", "streets", "numberhouse", "2750", "dnd", 21202120, "home");
         PersonDTO result = facade.addPerson(p);
         assertEquals(p.getFirstName(), result.getFirstName());
     }
 
     @Test
-    public void testGetAllByZip() {
+    public void testGetAllByZip() throws MissingInputException {
         List<PersonDTO> resultList = facade.getAllByZip("2750");
         System.out.println("All by zip: " + resultList);
         assertThat(resultList, everyItem(hasProperty("zip")));

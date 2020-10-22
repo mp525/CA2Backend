@@ -13,6 +13,7 @@ import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
+import exceptions.MissingInputException;
 import exceptions.PersonNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -159,8 +160,11 @@ public class PersonFacade {
         return zips;
     }
 
-    public List<PersonDTO> getAllByZip(String zip) {
+    public List<PersonDTO> getAllByZip(String zip) throws MissingInputException{
         EntityManager em = emf.createEntityManager();
+        if(zip.length() < 3 || zip.length() > 4){
+            throw new MissingInputException("Zipcode was not of appropriate length of 3 or 4 digits!");
+        }
         List<PersonDTO> persons = null;
 
         try {
@@ -177,8 +181,17 @@ public class PersonFacade {
         return persons;
     }
 
-    public PersonDTO addPerson(PersonDTO p) {
+    public PersonDTO addPerson(PersonDTO p) throws MissingInputException {
         EntityManager em = emf.createEntityManager();
+        if (p.getFirstName().length() == 0 || p.getLastName().length() == 0) {
+            throw new MissingInputException("First Name and/or Last Name is missing!");
+        }
+        if(p.getZip().length() < 3 || p.getZip().length() > 4){
+            throw new MissingInputException("Zipcode was not of appropriate length of 3 or 4 digits!");
+        }
+        if (p.getPhoneNr() == 0) {
+            throw new MissingInputException("Phonenumber is missing!");
+        }
         Person person = new Person(p.getFirstName(), p.getLastName(), p.getEmail());
         PersonDTO p2 = null;
         try {
@@ -199,19 +212,8 @@ public class PersonFacade {
             Phone phone = new Phone(p.getPhoneNr(), p.getPhoneDisc());
             person.addPhone(phone);
 
-//            TypedQuery<Phone> query3 = em.createQuery("Select p from Phone p where p.person.id = :id", Phone.class);
-//            query3.setParameter("id", person.getId());
-//            List<Phone> phones = query3.getResultList();
-//            
-//            for (PhoneDTO pdto : p.getPhones()) {
-//                person.addPhone(new Phone(pdto.getNumber(), pdto.getDescription()));
-//            }
             em.getTransaction().begin();
             em.persist(person);
-
-//            TypedQuery<Phone> query3 = em.createQuery("Select p from Phone p where p.person.id = :id", Phone.class);
-//            query3.setParameter("id", person.getId());
-//            List<Phone> phones = query3.getResultList();
             em.getTransaction().commit();
             p2 = new PersonDTO(person);
 

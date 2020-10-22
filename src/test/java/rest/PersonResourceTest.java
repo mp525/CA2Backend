@@ -126,7 +126,7 @@ public class PersonResourceTest {
     @Test
     public void testAddPerson() {
         given()
-                .contentType("application/json")//String firstName, String lastName, String email, String street, String houseNr, String zip, String hobbyName, int phoneNr, String phoneDisc
+                .contentType("application/json")
                 .body(new PersonDTO("LaterPostBoy", "Jensen", "postemail", "nyby 22", "21a", "2750", "dnd", 21213030, "homephone"))
                 .when()
                 .post("person")
