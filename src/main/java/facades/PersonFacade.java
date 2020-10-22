@@ -214,6 +214,7 @@ public class PersonFacade {
             if (hobby == null) {
                 throw new HobbyNotFoundException(String.format("Could not find hobby by the name: %s in database", p.getHobbyName()));
             }
+            person.addHobby(hobby);
             Phone phone = new Phone(p.getPhoneNr(), p.getPhoneDisc());
             TypedQuery<Phone> query = em.createQuery("select p from Phone p where p.number = :number", Phone.class);
             query.setParameter("number", p.getPhoneNr());
