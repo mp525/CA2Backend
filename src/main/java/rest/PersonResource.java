@@ -9,6 +9,11 @@ import DTOS.PersonDTO;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
+
+import exceptions.MissingInputException;
+
+import exceptions.HobbyNotFoundException;
+
 import exceptions.PersonNotFoundException;
 import facades.PersonFacade;
 import java.util.List;
@@ -61,7 +66,8 @@ public class PersonResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
 
-    public String getJson(@PathParam("hobbyID") String hobbyID) {
+
+    public String getJson(@PathParam("hobbyID") String hobbyID) throws PersonNotFoundException {
 
         List<PersonDTO> p = FACADE.getAllByHobby(hobbyID);
         return new Gson().toJson(p);
@@ -75,17 +81,32 @@ public class PersonResource {
     public String updatePerson(@PathParam("id") int id, String p) throws NullPointerException, PersonNotFoundException {
         PersonDTO person = GSON.fromJson(p, PersonDTO.class);
 
+
         person.setId(id);
         PersonDTO edited = FACADE.editPerson(person);
         return GSON.toJson(edited);
 
     }
 
-    @Path("id/{phone}")
+
+//    @PUT
+//    @Path("/{id}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public String updatePerson(@PathParam("id") int id, String p) throws NullPointerException, PersonNotFoundException {
+//        PersonDTO person = GSON.fromJson(p, PersonDTO.class);
+//        
+//        person.setId(id);
+//        PersonDTO edited = FACADE.editPerson(person);
+//        return GSON.toJson(edited);
+//
+//    }
+    @Path("phone/{phone}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getPersonByPhone(@PathParam("phone") int phone) {
-        PersonDTO p = FACADE.getByPhone(phone);
+    public String getPersonByPhone(@PathParam("phone")int phone) throws PersonNotFoundException {
+      PersonDTO p = FACADE.getByPhone(phone);
+       
 
         return new Gson().toJson(p);
 
@@ -102,7 +123,9 @@ public class PersonResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String addPerson(String person) {
+
+    public String addPerson(String person) throws MissingInputException, HobbyNotFoundException{
+
         PersonDTO personDTO = GSON.fromJson(person, PersonDTO.class);
         PersonDTO dto = FACADE.addPerson(personDTO);
         String json = GSON.toJson(dto);
@@ -112,7 +135,7 @@ public class PersonResource {
     @Path("allWithZip/{zip}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String allWithZip(@PathParam("zip") String zip) {
+    public String allWithZip(@PathParam("zip") String zip) throws MissingInputException, PersonNotFoundException{
         List<PersonDTO> list = FACADE.getAllByZip(zip);
         String json = GSON.toJson(list);
         return json;
@@ -131,7 +154,7 @@ public class PersonResource {
     @Path("countByHobby/{hobbyName}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String countWithGivenHobby(@PathParam("hobbyName") String hobbyName) {
+    public String countWithGivenHobby(@PathParam("hobbyName") String hobbyName) throws HobbyNotFoundException {
         int count = FACADE.countWithGivenHobby(hobbyName);
         //return GSON.toJson(count);
         return "{\"count\":" + count + "}";

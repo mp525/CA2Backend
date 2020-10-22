@@ -26,7 +26,9 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import org.junit.jupiter.api.AfterAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -126,7 +128,7 @@ public class PersonResourceTest {
     @Test
     public void testAddPerson() {
         given()
-                .contentType("application/json")//String firstName, String lastName, String email, String street, String houseNr, String zip, String hobbyName, int phoneNr, String phoneDisc
+                .contentType("application/json")
                 .body(new PersonDTO("LaterPostBoy", "Jensen", "postemail", "nyby 22", "21a", "2750", "dnd", 21213030, "homephone"))
                 .when()
                 .post("person")
@@ -135,6 +137,67 @@ public class PersonResourceTest {
                 .body("lastName", equalTo("Jensen"))
                 .body("id", notNullValue());
     }
+    @Test
+    public void testAddPersonErrorName() {
+        String message;
+        message = given()
+                .contentType("application/json")
+                .body(new PersonDTO("", "", "postemail", "nyby 22", "21a", "2750", "dnd", 21213030, "homephone"))
+                .when()
+                .post("person")
+                .then()
+                .extract().body().jsonPath().getString("message");
+        assertThat(message, is("First Name and/or Last Name is missing!"));
+    }
+    @Test
+    public void testAddPersonErrorZip() {
+        String message;
+        message = given()
+                .contentType("application/json")
+                .body(new PersonDTO("LaterPostBoy", "Jensen", "postemail", "nyby 22", "21a", "1", "dnd", 21213030, "homephone"))
+                .when()
+                .post("person")
+                .then()
+                .extract().body().jsonPath().getString("message");
+        assertThat(message, is("Zipcode was not of appropriate length of 3 or 4 digits!"));
+    }
+    @Test
+    public void testAddPersonErrorPhoneNr() {
+        String message;
+        message = given()
+                .contentType("application/json")
+                .body(new PersonDTO("LaterPostBoy", "Jensen", "postemail", "nyby 22", "21a", "1234", "dnd", 0, "homephone"))
+                .when()
+                .post("person")
+                .then()
+                .extract().body().jsonPath().getString("message");
+        assertThat(message, is("Phonenumber is missing!"));
+    }
+    @Test
+    public void testAddPersonErrorHobby() {
+        String message;
+        message = given()
+                .contentType("application/json")
+                .body(new PersonDTO("LaterPostBoy", "Jensen", "postemail", "nyby 22", "21a", "1234", "notahobby", 99999999, "homephone"))
+                .when()
+                .post("person")
+                .then()
+                .extract().body().jsonPath().getString("message");
+        assertThat(message, is("Could not find hobby by the name: notahobby in database"));
+    }
+    @Test
+    public void testAddPersonErrorDupePhone() {
+        String message;
+        message = given()
+                .contentType("application/json")
+                .body(new PersonDTO("LaterPostBoy", "Jensen", "postemail", "nyby 22", "21a", "1234", "dnd", 1, "homephone"))
+                .when()
+                .post("person")
+                .then()
+                .extract().body().jsonPath().getString("message");
+        assertThat(message, is("Phone number 1 already exists in database!"));
+    }
+    
 
 
     @Test
@@ -166,7 +229,7 @@ public class PersonResourceTest {
     @Test
     public void testFindByPhone() {
          given()
-         .get("person/id/1")
+         .get("person/phone/1")
          .then()
          .assertThat()
          .body("firstName", equalTo("fornavn"));      
@@ -190,6 +253,45 @@ public class PersonResourceTest {
         assertEquals(p.getEmail(),p1DTO.getEmail());
         assertEquals(p.getLastName(),p1DTO.getLastName());
         assertEquals(p.getFirstName(),p1DTO.getFirstName());
+    }
+    
+    @Test
+    public void testDeletePerson() {
+//        PersonDTO x = given()
+//                .pathParam("id", p1.getId())
+//                .delete("/person/{id}")
+//                .then()
+//                .extract().body().jsonPath();
+//        String x = given()
+//                .contentType("application/json")
+//                .body(new PersonDTO(p1))
+//                .when()
+//                .pathParam("id", p1.getId())
+//                .delete("/person/{id}")
+//                .then()
+//                .extract().body().jsonPath().getString(p1.toString());
+//        assertEquals(x, p1.toString());
+        
+        String y;
+        y = given()
+                .contentType("application/json")
+                .pathParam("id", p1.getId())
+                .delete("person/{id}")
+                .then()
+                .extract().body().jsonPath().getString("firstName"); //getString tager kolonne/feltnavn! Hvis flere har samme navn, bliver det et array
+        System.out.println(y);
+        assertEquals(p1.getFirstName(), y);
+        /*
+                given()
+                .contentType("application/json")//String firstName, String lastName, String email, String street, String houseNr, String zip, String hobbyName, int phoneNr, String phoneDisc
+                .body(new PersonDTO("LaterPostBoy", "Jensen", "postemail", "nyby 22", "21a", "2750", "dnd", 21213030, "homephone"))
+                .when()
+                .post("person")
+                .then()
+                .body("firstName", equalTo("LaterPostBoy"))
+                .body("lastName", equalTo("Jensen"))
+                .body("id", notNullValue());
+                */
     }
 
 }

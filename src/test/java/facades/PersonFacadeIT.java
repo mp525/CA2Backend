@@ -11,6 +11,8 @@ import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
+import exceptions.MissingInputException;
+import exceptions.HobbyNotFoundException;
 import exceptions.PersonNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +124,7 @@ public class PersonFacadeIT {
     }
 
     @Test
-    public void testGetByPhone() {
+    public void testGetByPhone() throws PersonNotFoundException {
 
         PersonDTO exp = facade.getByPhone(1);
         String result = "fornavn";
@@ -131,7 +133,7 @@ public class PersonFacadeIT {
     }
 
     @Test
-    public void testgetAllByHobby() {
+    public void testgetAllByHobby() throws PersonNotFoundException {
 
         List<PersonDTO> exp = facade.getAllByHobby("dnd");
         String result = "fornavn";
@@ -154,7 +156,7 @@ public class PersonFacadeIT {
 
     
     @Test
-    public void testCountWithGivenHobby() {
+    public void testCountWithGivenHobby() throws HobbyNotFoundException {
         int res = facade.countWithGivenHobby("name");
         int res2 = facade.countWithGivenHobby("dnd");
         assertEquals(2, res);
@@ -216,21 +218,48 @@ public class PersonFacadeIT {
         assertEquals(pd1.getLastName(), pd2.getLastName());
     }
 
-//    @Test
-//    public void testAddPerson(){
-//        PersonDTO p = new PersonDTO(p1);
-//        PersonDTO result = facade.addPerson(p);
-//        assertEquals(p.getFirstName(), result.getFirstName());
-//    }
+
     @Test
-    public void testAddPerson() {
+    public void testAddPerson() throws MissingInputException, HobbyNotFoundException {
         PersonDTO p = new PersonDTO("fName", "lName", "mailbro", "streets", "numberhouse", "2750", "dnd", 21202120, "home");
         PersonDTO result = facade.addPerson(p);
         assertEquals(p.getFirstName(), result.getFirstName());
     }
+    
+    @Test
+    public void testAddPersonNegativeName(){
+        Exception exception = assertThrows(MissingInputException.class, () ->
+            facade.addPerson(new PersonDTO("","","","","","","",0,"")));
+        assertEquals("First Name and/or Last Name is missing!", exception.getMessage());
+    }
+    @Test
+    public void testAddPersonNegativeZip(){
+        Exception exception = assertThrows(MissingInputException.class, () ->
+            facade.addPerson(new PersonDTO("fName","lName","","","","12","",0,"")));
+        assertEquals("Zipcode was not of appropriate length of 3 or 4 digits!", exception.getMessage());
+    }
+    @Test
+    public void testAddPersonNegativePhone(){
+        Exception exception = assertThrows(MissingInputException.class, () ->
+            facade.addPerson(new PersonDTO("fName","lName","","","","1232","",0,"")));
+        assertEquals("Phonenumber is missing!", exception.getMessage());
+    }
+    @Test
+    public void testAddPersonNegativeHobby(){
+        Exception exception = assertThrows(HobbyNotFoundException.class, () ->
+            facade.addPerson(new PersonDTO("fName","lName","","","","2750","notahobby",12345678,"")));
+        assertEquals("Could not find hobby by the name: notahobby in database", exception.getMessage());
+    }
+    @Test
+    public void testAddPersonNegativeDuplicatePhone(){
+        Exception exception = assertThrows(MissingInputException.class, () ->
+            facade.addPerson(new PersonDTO("fName", "lName", "mailbro", "streets", "numberhouse", "2750", "dnd", 1, "home")));
+        assertEquals("Phone number 1 already exists in database!", exception.getMessage());
+    }
+    
 
     @Test
-    public void testGetAllByZip() {
+    public void testGetAllByZip() throws MissingInputException, PersonNotFoundException {
         List<PersonDTO> resultList = facade.getAllByZip("2750");
         System.out.println("All by zip: " + resultList);
         assertThat(resultList, everyItem(hasProperty("zip")));
@@ -241,5 +270,19 @@ public class PersonFacadeIT {
         )
         );
     }
+    @Test
+    public void testGetAllByZipNegative(){
+        Exception exception = assertThrows(MissingInputException.class, () ->
+            facade.getAllByZip("0"));
+        assertEquals("Zipcode was not of appropriate length of 3 or 4 digits!", exception.getMessage());
+    }
+    @Test
+    public void testGetAllByZipNegativeZipcode(){
+        Exception exception = assertThrows(PersonNotFoundException.class, () ->
+            facade.getAllByZip("9999"));
+        assertEquals("Could not find zipcode 9999 in database", exception.getMessage());
+    }
+    
+    
 
 }
