@@ -44,18 +44,23 @@ public class PersonFacade {
     }
 
     //Matti
-    public PersonDTO getByPhone(int phonenr) throws NotFoundException {
+    public PersonDTO getByPhone(int phonenr) throws PersonNotFoundException {
         EntityManager enf = emf.createEntityManager();
         Person p;
         try {
             TypedQuery<Person> query = enf.createQuery(
                     "SELECT p.person FROM Phone p INNER JOIN p.person pers WHERE p.number='" + phonenr + "'", Person.class);
 
-            p = query.getSingleResult();
+            List<Person>plist = query.getResultList();
+            if(plist.isEmpty()){
+                throw new PersonNotFoundException("Personen var ikke fundet");
+            }else{
+                p=plist.get(0);
+            }
         } finally {
             enf.close();
         }
-
+            
         System.out.println(p);
         System.out.println(p.getAddress().getStreet() + p.getAddress().getHouseNr());
 
@@ -71,7 +76,7 @@ public class PersonFacade {
 
     }
 
-    public List<PersonDTO> getAllByHobby(String hobby) throws NotFoundException {
+    public List<PersonDTO> getAllByHobby(String hobby) throws PersonNotFoundException {
         EntityManager enf = emf.createEntityManager();
         List<PersonDTO> listDTO;
         try {
@@ -81,6 +86,9 @@ public class PersonFacade {
             );
 
             List<Person> p = query.getResultList();
+            if(p.isEmpty()){
+                throw new PersonNotFoundException("ingen personer var fundet");
+            }
             System.out.println("Get all hobby: her fra");
             System.out.println(p);
 
@@ -222,7 +230,7 @@ public class PersonFacade {
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws PersonNotFoundException {
         instance.getByPhone(11111112);
 
         Person p1 = new Person("cool@dude.yeah", "Niels", "Petersen");
