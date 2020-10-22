@@ -18,6 +18,7 @@ import exceptions.PersonNotFoundException;
 import facades.PersonFacade;
 import java.util.List;
 
+
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -40,12 +41,10 @@ import utils.EMF_Creator;
 @Path("person")
 public class PersonResource {
 
-
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
 
     private static final PersonFacade FACADE = PersonFacade.getGMPFacade(EMF);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
 
     Gson g;
     @Context
@@ -59,23 +58,36 @@ public class PersonResource {
 
     /**
      * Retrieves representation of an instance of rest.PersonResource
-
-*
+     *
+     *
      * @return an instance of java.lang.String
      */
     @Path("byhobby/{hobbyID}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
 
-    public String getJson(@PathParam("hobbyID")String hobbyID) throws PersonNotFoundException {
-        
-        List<PersonDTO> p =FACADE.getAllByHobby(hobbyID);
-       return new Gson().toJson(p);
 
-       
+    public String getJson(@PathParam("hobbyID") String hobbyID) throws PersonNotFoundException {
 
-    
+        List<PersonDTO> p = FACADE.getAllByHobby(hobbyID);
+        return new Gson().toJson(p);
+
     }
+
+    @PUT
+    @Path("update/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String updatePerson(@PathParam("id") int id, String p) throws NullPointerException, PersonNotFoundException {
+        PersonDTO person = GSON.fromJson(p, PersonDTO.class);
+
+
+        person.setId(id);
+        PersonDTO edited = FACADE.editPerson(person);
+        return GSON.toJson(edited);
+
+    }
+
 
 //    @PUT
 //    @Path("/{id}")
@@ -95,30 +107,31 @@ public class PersonResource {
     public String getPersonByPhone(@PathParam("phone")int phone) throws PersonNotFoundException {
       PersonDTO p = FACADE.getByPhone(phone);
        
+
         return new Gson().toJson(p);
 
-
     }
-    
+
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String show(){
-        
-        
+    public String show() {
+
         return "Shit work ma dude";
-        
+
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+
     public String addPerson(String person) throws MissingInputException, HobbyNotFoundException{
+
         PersonDTO personDTO = GSON.fromJson(person, PersonDTO.class);
         PersonDTO dto = FACADE.addPerson(personDTO);
         String json = GSON.toJson(dto);
         return json;
     }
-    
+
     @Path("allWithZip/{zip}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -127,7 +140,17 @@ public class PersonResource {
         String json = GSON.toJson(list);
         return json;
     }
-    
+
+    @Path("allZips")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAllZips() {
+        List<String> list = FACADE.showAllZips();
+        return GSON.toJson(list);
+//        String json = GSON.toJson(list);
+//        return json;
+    }
+
     @Path("countByHobby/{hobbyName}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -136,7 +159,7 @@ public class PersonResource {
         //return GSON.toJson(count);
         return "{\"count\":" + count + "}";
     }
-    
+
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -145,5 +168,4 @@ public class PersonResource {
         return GSON.toJson(person);
     }
 
-    
 }
