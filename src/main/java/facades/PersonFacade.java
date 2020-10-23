@@ -117,55 +117,24 @@ public class PersonFacade {
 
             try {
                 em.getTransaction().begin();
-                pFind.setFirstName(p.getFirstName());
-                pFind.setLastName(p.getLastName());
-                pFind.setEmail(p.getEmail());
-                Address a1 = new Address(p.getStreet(), p.getHouseNr());
-                pFind.getAddress().removePerson(pFind);
-                if (pFind.getAddress().getPersons().isEmpty()) {
-                    em.remove(pFind.getAddress());
+                if (p.getFirstName() != null) {
+                    editCredentials(pFind, p);
                 }
 
-                a1.setStreet(p.getStreet());
-                a1.setHouseNr(p.getHouseNr());
-                CityInfo ci1 = em.find(CityInfo.class, p.getZip());
-
-                a1.setCityInfo(ci1);
-                a1.getCityInfo().getZipCode();
-//                p.getAddress().getCityInfo().getZipCode()
-
-                a1.addPerson(pFind);
-                pFind.setAddress(a1);
+                Address a1 = new Address(p.getStreet(), p.getHouseNr());
+                if (p.getZip() != null && a1.getStreet() != null && a1.getHouseNr() != null) {
+                    setAddress(pFind, em, a1, p);
+                }
 
                 Phone ph1 = new Phone(p.getPhoneNr(), p.getPhoneDisc());
-
-                TypedQuery<Person> query = em.createQuery(
-                        "SELECT p.person FROM Phone p INNER JOIN p.person pers WHERE p.number='" + p.getPhoneNr() + "'", Person.class);
-                            List<Person> plist = query.getResultList();
-            if (!plist.contains(p.getPhoneNr())) {
-                pFind.addPhone(ph1);
-            }
-             
-                
-                if (pFind.getPhones().contains(ph1.getNumber())) {
-                    pFind.removePhone(ph1);
+                if (p.getPhoneNr() > 0) {
+                    editPhone(em, p, pFind, ph1);
                 }
 
-                //Hobby data
-//                List<HobbyDTO> hobbyDTOList = p.getHobbies();
-//                if (hobbyDTOList == null) {
-//                    hobbyDTOList = new ArrayList<HobbyDTO>();
-//                }
-//                List<Hobby> hobbyList = new ArrayList<Hobby>();
-                Hobby hobbyFound = em.find(Hobby.class, p.getHobbyName());
-
-                if (!pFind.getHobbies().contains(hobbyFound)) {
-
-                    pFind.addHobby(hobbyFound);
+                if (p.getHobbyName() != null) {
+                    editHobby(em, p, pFind);
                 }
 
-//                    hobbyList.add(hobbyFound);
-//                pFind.setHobbies(hobbyList);
                 em.persist(pFind);
                 em.getTransaction().commit();
             } finally {
@@ -173,6 +142,60 @@ public class PersonFacade {
             }
         }
         return new PersonDTO(pFind);
+    }
+
+    private void editHobby(EntityManager em, PersonDTO p, Person pFind) {
+        //if (p.getHobbyName() != null) {
+        Hobby hobbyFound = em.find(Hobby.class, p.getHobbyName());
+
+        if (!pFind.getHobbies().contains(hobbyFound)) {
+
+            pFind.addHobby(hobbyFound);
+        }
+    }
+
+    private void editPhone(EntityManager em, PersonDTO p, Person pFind, Phone ph1) {
+        //if (p.getPhoneNr() > 0)
+        TypedQuery<Person> query = em.createQuery(
+                "SELECT p.person FROM Phone p INNER JOIN p.person pers WHERE p.number='" + p.getPhoneNr() + "'", Person.class);
+        List<Person> plist = query.getResultList();
+        if (!plist.contains(p.getPhoneNr())) {
+            pFind.addPhone(ph1);
+        }
+
+        if (pFind.getPhones().contains(ph1.getNumber())) {
+            pFind.removePhone(ph1);
+        }
+    }
+
+    private void editCredentials(Person pFind, PersonDTO p) {
+        //if (p.getFirstName() != null) {
+        pFind.setFirstName(p.getFirstName());
+
+        if (p.getLastName() != null) {
+            pFind.setLastName(p.getLastName());
+        }
+        if (p.getEmail() != null) {
+            pFind.setEmail(p.getEmail());
+        }
+    }
+
+    private void setAddress(Person pFind, EntityManager em, Address a1, PersonDTO p) {
+        // if (p.getZip() != null && a1.getStreet() != null && a1.getHouseNr() != null) {
+        pFind.getAddress().removePerson(pFind);
+        if (pFind.getAddress().getPersons().isEmpty()) {
+            em.remove(pFind.getAddress());
+        }
+
+        a1.setStreet(p.getStreet());
+        a1.setHouseNr(p.getHouseNr());
+        CityInfo ci1 = em.find(CityInfo.class, p.getZip());
+
+        a1.setCityInfo(ci1);
+        a1.getCityInfo().getZipCode();
+
+        a1.addPerson(pFind);
+        pFind.setAddress(a1);
     }
 
     public List<String> showAllZips() {
@@ -231,7 +254,7 @@ public class PersonFacade {
                 throw new HobbyNotFoundException(String.format("Could not find hobby by the name: %s in database", p.getHobbyName()));
             }
             person.addHobby(hobby);
-            
+
             Phone phone = new Phone(p.getPhoneNr(), p.getPhoneDisc());
             TypedQuery<Phone> query = em.createQuery("select p from Phone p where p.number = :number", Phone.class);
             query.setParameter("number", p.getPhoneNr());
