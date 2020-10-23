@@ -149,6 +149,12 @@ public class PersonResourceTest {
                 .extract().body().jsonPath().getString("message");
         assertThat(message, is("First Name and/or Last Name is missing!"));
     }
+    
+    @Test
+    public void testEditPerson() {
+        
+    }
+    
     @Test
     public void testAddPersonErrorZip() {
         String message;

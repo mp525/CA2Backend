@@ -53,16 +53,16 @@ public class PersonFacade {
             TypedQuery<Person> query = enf.createQuery(
                     "SELECT p.person FROM Phone p INNER JOIN p.person pers WHERE p.number='" + phonenr + "'", Person.class);
 
-            List<Person>plist = query.getResultList();
-            if(plist.isEmpty()){
+            List<Person> plist = query.getResultList();
+            if (plist.isEmpty()) {
                 throw new PersonNotFoundException("Personen var ikke fundet");
-            }else{
-                p=plist.get(0);
+            } else {
+                p = plist.get(0);
             }
         } finally {
             enf.close();
         }
-            
+
         System.out.println(p);
         System.out.println(p.getAddress().getStreet() + p.getAddress().getHouseNr());
 
@@ -88,7 +88,7 @@ public class PersonFacade {
             );
 
             List<Person> p = query.getResultList();
-            if(p.isEmpty()){
+            if (p.isEmpty()) {
                 throw new PersonNotFoundException("ingen personer var fundet");
             }
             System.out.println("Get all hobby: her fra");
@@ -110,6 +110,7 @@ public class PersonFacade {
         EntityManager em = emf.createEntityManager();
 //              TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.id =:" + p.getId() + "", Person.class);
         Person pFind = em.find(Person.class, p.getId());
+
         if (pFind == null) {
             throw new PersonNotFoundException(String.format("Person not found, so they coulden't be edited", pFind.toString()));
         } else {
@@ -129,7 +130,6 @@ public class PersonFacade {
                 a1.setHouseNr(p.getHouseNr());
                 CityInfo ci1 = em.find(CityInfo.class, p.getZip());
 
-//                ci1.setCity(p.);
                 a1.setCityInfo(ci1);
                 a1.getCityInfo().getZipCode();
 //                p.getAddress().getCityInfo().getZipCode()
@@ -137,20 +137,36 @@ public class PersonFacade {
                 a1.addPerson(pFind);
                 pFind.setAddress(a1);
 
-                //Hobby data
-                List<HobbyDTO> hobbyDTOList = p.getHobbies();
-                List<Hobby> hobbyList = new ArrayList<Hobby>();
-                for (HobbyDTO hobbyDTO : hobbyDTOList) {
+                Phone ph1 = new Phone(p.getPhoneNr(), p.getPhoneDisc());
 
-                    Hobby hobbyFound = em.find(Hobby.class, hobbyDTO.getName());
-
-                    if (hobbyFound == null) {
-                        em.persist(hobbyFound);
-                    }
-                    hobbyList.add(hobbyFound);
+                TypedQuery<Person> query = em.createQuery(
+                        "SELECT p.person FROM Phone p INNER JOIN p.person pers WHERE p.number='" + p.getPhoneNr() + "'", Person.class);
+                            List<Person> plist = query.getResultList();
+            if (!plist.contains(p.getPhoneNr())) {
+                pFind.addPhone(ph1);
+            }
+             
+                
+                if (pFind.getPhones().contains(ph1.getNumber())) {
+                    pFind.removePhone(ph1);
                 }
 
-                pFind.setHobbies(hobbyList);
+                //Hobby data
+//                List<HobbyDTO> hobbyDTOList = p.getHobbies();
+//                if (hobbyDTOList == null) {
+//                    hobbyDTOList = new ArrayList<HobbyDTO>();
+//                }
+//                List<Hobby> hobbyList = new ArrayList<Hobby>();
+                Hobby hobbyFound = em.find(Hobby.class, p.getHobbyName());
+
+                if (!pFind.getHobbies().contains(hobbyFound)) {
+
+                    pFind.addHobby(hobbyFound);
+                }
+
+//                    hobbyList.add(hobbyFound);
+//                pFind.setHobbies(hobbyList);
+                em.persist(pFind);
                 em.getTransaction().commit();
             } finally {
                 em.close();
@@ -237,7 +253,6 @@ public class PersonFacade {
 
     }
 
-
     private static boolean phoneNrInvalid(PersonDTO p) {
         return p.getPhoneNr() <= 0;
     }
@@ -245,7 +260,6 @@ public class PersonFacade {
     private static boolean zipInvalid(PersonDTO p) {
         return p.getZip().length() < 3 || p.getZip().length() > 4;
     }
-
 
     private static boolean nameInvalid(PersonDTO p) {
         return p.getFirstName().length() == 0 || p.getLastName().length() == 0;

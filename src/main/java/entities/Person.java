@@ -81,6 +81,13 @@ public class Person implements Serializable {
         }
     }
     
+        public void removePhone(Phone phone) {
+        if(phone != null){
+            phones.remove(phone);
+        }
+    }
+    
+    
     public Address getAddress() {
         return address;
     }
