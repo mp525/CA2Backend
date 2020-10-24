@@ -205,6 +205,14 @@ public class PersonFacade {
 
         return zips;
     }
+    
+    public List<HobbyDTO> getAllHobbies() {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery query = em.createQuery("Select h from Hobby h", Hobby.class);
+        List<Hobby> hobbies = query.getResultList();
+        List<HobbyDTO> dtoList = HobbyDTO.toDTO(hobbies);
+        return dtoList;
+    }
 
     public List<PersonDTO> getAllByZip(String zip) throws MissingInputException, PersonNotFoundException {
         EntityManager em = emf.createEntityManager();

@@ -5,6 +5,7 @@
  */
 package rest;
 
+import DTOS.HobbyDTO;
 import DTOS.PersonDTO;
 
 import com.google.gson.GsonBuilder;
@@ -166,6 +167,15 @@ public class PersonResource {
     public String deletePerson(@PathParam("id") int id) throws PersonNotFoundException {
         PersonDTO person = FACADE.deletePerson(id);
         return GSON.toJson(person);
+    }
+    
+    @Path("allHobbies")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String allWithZip(){
+        List<HobbyDTO> list = FACADE.getAllHobbies();
+        String json = GSON.toJson(list);
+        return json;
     }
 
 }
